@@ -49,11 +49,11 @@ Primer paso (sólo hay que hacerlo una vez)
   - Abre un terminal en tu ordenador y crea un directorio para tus prácticas 
    de Programación 2 (p.ej. /home/paco/p2-2021):
 
-   $ mkdir prac-p2
+   $ mkdir p2-2022
 
   - Bájate el repositorio que has creado
 
-   $ cd prac-p2
+   $ cd p2-2022
 
    $ git clone https://github.com/xxx99-ua/p2-00000000
 
