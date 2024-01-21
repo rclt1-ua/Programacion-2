@@ -2,6 +2,7 @@
 *.o
 
 # ejecutables de las prácticas de Programación 2
+prac0
 prac1
 prac2
 prac3
