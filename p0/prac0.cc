@@ -1,4 +1,3 @@
-
 // Práctica 0
 #include <iostream>
 
@@ -31,7 +30,7 @@ int printN(int tamanyo){
         for(int aux2 = 0; aux2 < tamanyo; aux2++){
           if(aux2 == 0||aux2 == tamanyo-1||aux2==aux1){
             cout<<"*";
-            contador ++;
+            contadorAs ++;
           }
           else{
             cout<<" ";
@@ -49,30 +48,47 @@ int printN(int tamanyo){
   return contadorAs;
 }
 
+
 //EJERCICIO 3
-int firstPrimes(int n);
-bool isPrime(int p);
+int firstPrimes(int nume){
+  int cantidad = 0, contador, sumador = 0;
 
-
-
-int firstPrimes(int cantidad){
-  int auxi, sumador = 0;
-
-    cout << "Introduzca un numero" << endl;
-    cin >> cantidad;
-
-  for(auxi = 2 ; cantidad != contador; auxi++){
-    if(isPrime(auxi)){
-      cout << auxi << " ";
-      sumador = sumador + auxi;
+  for(contador = 2 ; cantidad < nume; contador++){
+    if(isPrime(contador)){
+      cout << contador << " ";
+      sumador = sumador + contador;
+        cantidad++;
+    }
   }
-
-
-
-
-
-bool isPrime(int auxi){
-  if(auxi > 1 &&
-  
+  cout << endl;
+  cout << "La suma de los numeros es " << sumador << endl;
+  return sumador;
 }
 
+
+bool isPrime(int contador){
+  int auxi2;
+
+  if(contador <= 1){
+    return false;
+  }
+  for(auxi2 = 2; auxi2 <= contador/2; auxi2++){
+    if(contador % auxi2 == 0){
+      return false;
+    }
+  }
+  return true;
+}
+
+
+//EJERCICIO 4
+void Goldbach(int nume,int *pri1,int *pri2){
+
+
+
+
+
+
+
+
+}
