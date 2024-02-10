@@ -1,4 +1,7 @@
-// Práctica 0
+// Programación 2 - Práctica 0
+// DNI: A8590323
+// Nombre: Roberto Loor
+
 #include <iostream>
 #include <string.h>
 
