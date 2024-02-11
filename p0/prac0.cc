@@ -22,13 +22,13 @@ bool multiple(int numA, int numB){
 
 //EJERCICIO 2
 int printN(int tamanyo){
-  int contadorAs = 0, aux1, aux2;
+  int contadorAs = 0, auxN1, auxN2;
   
   cout << endl;
     if(tamanyo >= 4) {
-      for(aux1 = 0; aux1 < tamanyo; aux1++){
-        for(aux2 = 0; aux2 < tamanyo; aux2++){
-          if(aux2 == 0||aux2 == tamanyo-1||aux2==aux1){
+      for(auxN1 = 0; auxN1 < tamanyo; auxN1++){
+        for(auxN2 = 0; auxN2 < tamanyo; auxN2++){
+          if(auxN2 == 0||auxN2 == tamanyo-1||auxN2==auxN1){
             cout<<"*";
             contadorAs ++;
           }
@@ -49,13 +49,13 @@ int printN(int tamanyo){
 
 //EJERCICIO 3
 bool isPrime(int contador){
-  int auxi;
+  int comprobador;
 
   if(contador <= 1){
     return false;
   }
-  for(auxi = 2; auxi <= contador/2; auxi++){
-    if(contador % auxi == 0){
+  for(comprobador = 2; comprobador <= contador/2; comprobador++){
+    if(contador % comprobador == 0){
       return false;
     }
   }
@@ -79,22 +79,22 @@ int firstPrimes(int num){
 }
 
 //EJERCICIO 4
-void Goldbach(int nume,int *pri1,int *pri2){
-  int n1, n2, auxi = 0;
+void Goldbach(int nume,int &pri1,int &pri2){
+  int n1, n2, auxiSalida = 0;
 
-    for(n1 = 0; (n1 < nume) && (auxi == 0); n1++){
-      for(n2 = 0; (n2 < nume) && (auxi == 0); n2++){
+    for(n1 = 1; (n1 < nume) && (auxiSalida == 0); n1++){
+      for(n2 = 1; (n2 < nume) && (auxiSalida == 0); n2++){
         if(isPrime(n1) && isPrime(n2)){
           if(n1+n2 == nume){
             if(n1 < n2){
-              *pri1 = n1;
-              *pri2 = n2;
+              pri1 = n1;
+              pri2 = n2;
             }
             else{
-              *pri1 = n2;
-              *pri2 = n1;
+              pri1 = n2;
+              pri2 = n1;
             }
-            auxi++;
+            auxiSalida++;
           }
         }
       }
@@ -107,9 +107,11 @@ bool search(int v[], const int TAMVECTOR, int n){
 
   for(buscador = 0; buscador < TAMVECTOR; buscador++){
     if(v[buscador] == n){
+      cout << "True" << endl;
       return true;
     }
   }
+  cout << "False" << endl;
   return false;
 }
 
@@ -125,10 +127,10 @@ int position(int v[],const int TAMVECTOR, int n){
 }
 
 int count(int v[], const int TAMVECTOR, int n) {
-  int auxi, contador = 0;
+  int comprobador, contador = 0;
 
-  for (auxi = 0; auxi < TAMVECTOR; auxi++) {
-    if (v[auxi] == n) {
+  for (comprobador = 0; comprobador < TAMVECTOR; comprobador++) {
+    if (v[comprobador] == n) {
       contador++;
     }
   }
@@ -139,44 +141,46 @@ int count(int v[], const int TAMVECTOR, int n) {
 
 //EJERCICIO 6
 int minOdds(int v[],const int TAMVECTOR){
-  int auxi, contImpar = 0;
+  int buscador, minImpar = 0;
 
-  for(auxi = 0; auxi < TAMVECTOR; auxi++){
-    if(v[auxi] % 2 != 0){
-      contImpar ++;
+  for(buscador = 0; buscador < TAMVECTOR; buscador++){
+    if(v[buscador] % 2 != 0 && minImpar == 0){
+      minImpar = v[buscador];
+    }
+    else if(v[buscador] % 2 != 0 && v[buscador] < minImpar){
+      minImpar = v[buscador];
     }
   }
- 
-  if(contImpar == 0){
-    return -1;
-  }
 
-  return contImpar;
+  return minImpar;
 }
 
-int posMaxMultFive(int v[],const int TAMVECTOR){
-  int auxi, posMax = -1, valMax = 0;
 
-  for(auxi = 0; auxi < TAMVECTOR; auxi++){
-    if(v[auxi] % 5 == 0 || v[auxi] == 0){
-      if(v[auxi] > valMax){
-          posMax = auxi;
-          valMax = v[auxi];
+int posMaxMultFive(int v[],const int TAMVECTOR){
+  int buscador, posMax = -1, valMax = 0;
+
+  for(buscador = 0; buscador < TAMVECTOR; buscador++){
+    if(v[buscador] % 5 == 0 || v[buscador] == 0){
+      if(v[buscador] > valMax){
+          posMax = buscador;
+          valMax = v[buscador];
       }
     }
   } 
+  
     return posMax;
 }
 
 
 //EJERCICIO 7
 void deleteChar(char str[],char c){
-  int auxi, largo = strlen(str), contador = 0;
+    int buscador, largo = strlen(str), pos = 0;
 
-  for(auxi = 0; auxi < largo; auxi++){
-    if(str[auxi] != c){
-      str[contador++] = str[auxi];
+    for(buscador = 0; buscador < largo; buscador++){
+    if(str[buscador] != c){
+      str[pos] = str[buscador];
+      pos++;
     }
   }
-  str[contador] = '\0';
+    str[pos] = '\0';
 }
