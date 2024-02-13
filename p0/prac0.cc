@@ -7,15 +7,22 @@
 
 using namespace std;
 
+// Práctica 0
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+
 //EJERCICIO 1
 bool multiple(int numA, int numB){
 
   if(numA%numB == 0 || numB%numA == 0){
-    cout << "True" << endl;
+    cout << "True" << " | ";
     return true;
   }
   else{
-    cout << "False" << endl;
+    cout << "False" << " | ";
     return false;
   }
 }
@@ -48,14 +55,14 @@ int printN(int tamanyo){
 
 
 //EJERCICIO 3
-bool isPrime(int contador){
+bool isPrime(int numProbar){
   int comprobador;
 
-  if(contador <= 1){
+  if(numProbar <= 1){
     return false;
   }
-  for(comprobador = 2; comprobador <= contador/2; comprobador++){
-    if(contador % comprobador == 0){
+  for(comprobador = 2; comprobador <= numProbar/2; comprobador++){
+    if(numProbar % comprobador == 0){
       return false;
     }
   }
@@ -107,22 +114,23 @@ bool search(int v[], const int TAMVECTOR, int n){
 
   for(buscador = 0; buscador < TAMVECTOR; buscador++){
     if(v[buscador] == n){
-      cout << "True" << endl;
+      cout << "True" << " | ";
       return true;
     }
   }
-  cout << "False" << endl;
+  cout << "False" << " | ";
   return false;
 }
 
 int position(int v[],const int TAMVECTOR, int n){
   int posicion;
 
-  for(posicion = 0; posicion < TAMVECTOR; posicion++){
-    if(v[posicion] == n){
-      return posicion;
+    for(posicion = 0; posicion < TAMVECTOR; posicion++){
+      if(v[posicion] == n){
+        return posicion;
+      }
     }
-  }
+  
   return -1;
 }
 
