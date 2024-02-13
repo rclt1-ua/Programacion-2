@@ -91,18 +91,10 @@ void Goldbach(int nume,int &pri1,int &pri2){
 
     for(n1 = 1; (n1 < nume) && (auxiSalida == 0); n1++){
       for(n2 = 1; (n2 < nume) && (auxiSalida == 0); n2++){
-        if(isPrime(n1) && isPrime(n2)){
-          if(n1+n2 == nume){
-            if(n1 < n2){
+        if(isPrime(n1) && isPrime(n2) && n1+n2 == nume){
               pri1 = n1;
               pri2 = n2;
-            }
-            else{
-              pri1 = n2;
-              pri2 = n1;
-            }
             auxiSalida++;
-          }
         }
       }
     }
