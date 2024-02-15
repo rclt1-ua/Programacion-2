@@ -134,10 +134,10 @@ int count(int v[], const int TAMVECTOR, int n) {
 
 //EJERCICIO 6
 int minOdds(int v[],const int TAMVECTOR){
-  int buscador, minImpar = 0;
+  int buscador, minImpar = -1;
 
   for(buscador = 0; buscador < TAMVECTOR; buscador++){
-    if(v[buscador] % 2 != 0 && minImpar == 0){
+    if(v[buscador] % 2 != 0 && minImpar == -1){
       minImpar = v[buscador];
     }
     else if(v[buscador] % 2 != 0 && v[buscador] < minImpar){
