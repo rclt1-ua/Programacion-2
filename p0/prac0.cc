@@ -7,13 +7,6 @@
 
 using namespace std;
 
-// Práctica 0
-#include <iostream>
-#include <string.h>
-
-using namespace std;
-
-
 //EJERCICIO 1
 bool multiple(int numA, int numB){
 
