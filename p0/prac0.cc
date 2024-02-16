@@ -165,7 +165,7 @@ int posMaxMultFive(int v[],const int TAMVECTOR){
   valMax = 0;
 
   for(buscador = 0; buscador < TAMVECTOR; buscador++){
-    if(v[buscador] % 5 == 0 || v[buscador] == 0){
+    if(v[buscador] % 5 == 0){
       if(v[buscador] > valMax){
           posMax = buscador;
           valMax = v[buscador];
