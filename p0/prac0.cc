@@ -18,11 +18,13 @@ bool multiple(int numA, int numB){
     cout << "False" << " | ";
     return false;
   }
+  
 }
 
 //EJERCICIO 2
 int printN(int tamanyo){
-  int contadorAs = 0, auxN1, auxN2;
+  int auxN1, auxN2,
+  contadorAs = 0;
   
   cout << endl;
     if(tamanyo >= 4) {
@@ -64,7 +66,9 @@ bool isPrime(int numProbar){
 }
 
 int firstPrimes(int num){
-  int cantidad = 0, contador, sumador = 0;
+  int contador, 
+  cantidad = 0,  
+  sumador = 0;
   
   cout << endl;
   for(contador = 2 ; cantidad < num; contador++){
@@ -91,6 +95,7 @@ void Goldbach(int nume,int &pri1,int &pri2){
         }
       }
     }
+
 }
 
 //EJERCICIO 5
@@ -108,19 +113,23 @@ bool search(int v[], const int TAMVECTOR, int n){
 }
 
 int position(int v[],const int TAMVECTOR, int n){
-  int posicion;
+  int buscador,
+  auxSalida = 0,
+  posicion = -1;
 
-    for(posicion = 0; posicion < TAMVECTOR; posicion++){
-      if(v[posicion] == n){
-        return posicion;
+    for(buscador = 0; buscador < TAMVECTOR && auxSalida == 0; buscador++){
+      if(v[buscador] == n){
+        posicion = buscador;
+        auxSalida++;
       }
     }
   
-  return -1;
+  return posicion;
 }
 
 int count(int v[], const int TAMVECTOR, int n) {
-  int comprobador, contador = 0;
+  int comprobador, 
+  contador = 0;
 
   for (comprobador = 0; comprobador < TAMVECTOR; comprobador++) {
     if (v[comprobador] == n) {
@@ -134,7 +143,8 @@ int count(int v[], const int TAMVECTOR, int n) {
 
 //EJERCICIO 6
 int minOdds(int v[],const int TAMVECTOR){
-  int buscador, minImpar = -1;
+  int buscador, 
+  minImpar = -1;
 
   for(buscador = 0; buscador < TAMVECTOR; buscador++){
     if(v[buscador] % 2 != 0 && minImpar == -1){
@@ -150,7 +160,9 @@ int minOdds(int v[],const int TAMVECTOR){
 
 
 int posMaxMultFive(int v[],const int TAMVECTOR){
-  int buscador, posMax = -1, valMax = 0;
+  int buscador, 
+  posMax = -1, 
+  valMax = 0;
 
   for(buscador = 0; buscador < TAMVECTOR; buscador++){
     if(v[buscador] % 5 == 0 || v[buscador] == 0){
@@ -167,13 +179,16 @@ int posMaxMultFive(int v[],const int TAMVECTOR){
 
 //EJERCICIO 7
 void deleteChar(char str[],char c){
-    int buscador, largo = strlen(str), pos = 0;
+    int buscador, 
+    largo = strlen(str), 
+    pos = 0;
 
     for(buscador = 0; buscador < largo; buscador++){
-    if(str[buscador] != c){
-      str[pos] = str[buscador];
-      pos++;
-    }
+      if(str[buscador] != c){
+        str[pos] = str[buscador];
+        pos++;
+      }
   }
+
     str[pos] = '\0';
 }
