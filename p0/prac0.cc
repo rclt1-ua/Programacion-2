@@ -11,11 +11,9 @@ using namespace std;
 bool multiple(int numA, int numB){
 
   if(numA%numB == 0 || numB%numA == 0){
-    cout << "True" << " | ";
     return true;
   }
   else{
-    cout << "False" << " | ";
     return false;
   }
   
@@ -104,11 +102,9 @@ bool search(int v[], const int TAMVECTOR, int n){
 
   for(buscador = 0; buscador < TAMVECTOR; buscador++){
     if(v[buscador] == n){
-      cout << "True" << " | ";
       return true;
     }
   }
-  cout << "False" << " | ";
   return false;
 }
 
