@@ -157,8 +157,12 @@ int minOdds(int v[],const int TAMVECTOR){
 
 int posMaxMultFive(int v[],const int TAMVECTOR){
   int buscador, 
-  posMax = -1, 
-  valMax = -1;
+  posMax = -1,
+  //valMax = 0; //Esto es lo incorrecto.
+  valMax = -1; //Esto es lo nuevo.
+              //Si valMax se inicializa como 0, cuando se haga la comparación v[buscador] > valMax 
+              //para analizar a 0 como múltiplo de 5, nunca se va asignar a valMax el valor de 0, ya que 0 no es mayor que 0. 
+              //La forma más práctica de arreglar esto es inicializar a valMax como un número negativo (SOLO APLICA CUANDO SE TRABAJA CON NÚMEROS NATURALES).
 
   for(buscador = 0; buscador < TAMVECTOR; buscador++){
     if(v[buscador] % 5 == 0){
