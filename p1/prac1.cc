@@ -149,6 +149,7 @@ void addAcademicYear(vector<AcademicYear> &listYears){
 
     if(idY == 0){ // SI NO SE INTRODUCE NINGUN ANYO, SE MUESTRA UN ERROR
         error(ERR_EMPTY);
+        cout << endl;
     }
 
     if(largo ==0){ // SI NO SE ENCUENTRA NINGUN ANYO, SE AGREGA DIRECTAMENTE EL ANYO
@@ -164,6 +165,7 @@ void addAcademicYear(vector<AcademicYear> &listYears){
 
         if(encontrado == 1){ // SI SE ENCUENTRA EL ANYO, SE MUESTRA UN ERROR
             error(ERR_DUPLICATED);
+            cout << endl;
         }
         else{ // SI NO SE ENCUENTRA EL ANYO, SE AGREGA EL ANYO
             anyo.id = idY;
@@ -185,6 +187,7 @@ void addAcademicYear(vector<AcademicYear> *listYears){
 
     if(idY == 0){ // SI NO SE INTRODUCE NINGUN ANYO, SE MUESTRA UN ERROR
         error(ERR_EMPTY);
+        cout << endl;
     }
 
     if(largo ==0){ // SI NO SE ENCUENTRA NINGUN ANYO, SE AGREGA DIRECTAMENTE EL ANYO
@@ -200,6 +203,7 @@ void addAcademicYear(vector<AcademicYear> *listYears){
 
         if(encontrado == 1){ // SI SE ENCUENTRA EL ANYO, SE MUESTRA UN ERROR
             error(ERR_DUPLICATED);
+            cout << endl;
         }
         else{ // SI NO SE ENCUENTRA EL ANYO, SE AGREGA EL ANYO
             anyo.id = idY;
