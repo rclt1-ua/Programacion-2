@@ -172,3 +172,38 @@ void addAcademicYear(vector<AcademicYear> &listYears){
     }
 }
 
+
+void addAcademicYear(vector<AcademicYear> *listYears){
+    int largo = listYears->size(), // LARGO DE LA LISTA DE ANYOS
+        encontrado = -1, // VARIABLE PARA SABER SI EL ANYO YA EXISTE
+        idY, recorredor; // IDY PARA EL ID ANYO Y RECORREDOR PARA EL FOR
+    AcademicYear anyo; // VARIABLE PARA AÑADIR EL ANYO
+    
+
+    cout<< "Introduce el año del curso académico: " << endl;
+    cin >> idY;
+
+    if(idY == 0){ // SI NO SE INTRODUCE NINGUN ANYO, SE MUESTRA UN ERROR
+        error(ERR_EMPTY);
+    }
+
+    if(largo ==0){ // SI NO SE ENCUENTRA NINGUN ANYO, SE AGREGA DIRECTAMENTE EL ANYO
+        anyo.id = idY;
+        listYears->push_back(anyo);
+    } 
+    else{ // SI HAY DATOS, SE COMPRUEBA QUE NO EXISTA EL ANYO DENTRO DEL VECTOR
+        for(recorredor = 0; recorredor < largo && !encontrado == -1; recorredor++){
+            if((*listYears)[recorredor].id == idY) {
+                encontrado = 1; // SI SE ENCUENTRA EL ANYO, SE CAMBIA EL VALOR DE LA VARIABLE PARA SABER QUE YA EXISTE
+            }
+        }
+
+        if(encontrado == 1){ // SI SE ENCUENTRA EL ANYO, SE MUESTRA UN ERROR
+            error(ERR_DUPLICATED);
+        }
+        else{ // SI NO SE ENCUENTRA EL ANYO, SE AGREGA EL ANYO
+            anyo.id = idY;
+            listYears->push_back(anyo);
+        }
+    }
+}
