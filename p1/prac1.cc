@@ -271,3 +271,106 @@ void deleteAcademicYear(vector<AcademicYear> &listYears){
     } 
     while(eliminado == -1 && seIntrodujo == 1);
 }
+
+
+
+
+//Funcion para añadir un profesor
+void addTeacher(vector<AcademicYear> &listYears){
+    int largo = listYears.size(), // LARGO DE LA LISTA DE ANYOS
+        seIntrodujo = 1, // VARIABLE PARA SABER SI SE INTRODUJO VARIABLES DE ANYOS
+        salir = 0, // VARIABLE PARA SALIR DEL BUCLE, 1 PARA SALIR POR ERROR, 2 PARA SALIR DESPUES DE AGREGAR EL PROFESOR
+        idYInt, // VARIABLE PARA EL ANYO EN ENTERO
+        recorredor; // IDY PARA EL ID ANYO Y RECORREDOR PARA EL FOR
+    float puntuacion; // VARIABLE PARA LA PUNTUACION DEL PROFESOR
+    string nombre, asignatura, apodo, idY; // VARIABLES PARA EL NOMBRE, ASIGNATURA, Y APODO DEL PROFESOR
+    Teacher profesor; // VARIABLE PARA AÑADIR EL PROFESOR
+    
+    do{ // SE HACE UN DO WHILE PARA QUE SE VUELVA A PEDIR EL ID DEL ANYO SI NO SE ENCUENTRA
+        cout<< "Enter academic year: " << endl;
+        getline(cin, idY);
+
+        if(largo == 0){ // SI NO SE EXISTE NINGUN ANYO, SE MUESTRA UN ERROR
+            error(ERR_NOT_EXIST);
+            salir = 1;
+        }
+        if(idY.empty()){ // SI NO SE INTRODUCE NINGUN ANYO, SE MUESTRA UN ERROR, EN ESTE CASO SE SALE DEL BUCLE DEVOLVIENDO EL ERROR
+            error(ERR_EMPTY);
+            seIntrodujo = -1;
+        }
+        
+        if(largo > 0 && seIntrodujo == 1){
+            idYInt = stoi(idY);
+
+            for(int recorredor = 0; recorredor < largo && salir == 0; recorredor++){
+                if(listYears[recorredor].id == idYInt){ // SE BUSCA EL ANYO SEGUN EL ID    
+                    do{
+                        cout << "Enter teacher name: " << endl;
+                        getline(cin, nombre);
+                        cin.get(); 
+
+                        if(profesor.name.empty()){ // SI NO SE INTRODUCE NINGUN NOMBRE, SE MUESTRA UN ERROR
+                            error(ERR_EMPTY);                                
+                            salir = 1;
+                        }
+
+                        for(int recorredor2 = 0; 
+                        (recorredor2 < listYears[recorredor].listTeachers.size()||listYears[recorredor].listTeachers.size() == 0) && salir == 0; 
+                        recorredor2++){// SE BUSCA EL PROFESOR SEGUN SU NOMBRE
+
+                            if(listYears[recorredor].listTeachers[recorredor2].name == nombre){ // SI SE ENCUENTRA EL PROFESOR, SE MUESTRA UN ERROR
+                                error(ERR_DUPLICATED);
+                            }
+                            else{ // SI SE ENCUENTRA AL PROFESOR, SE ALMACENA EL NOMBRE Y SE PREGUNTA POR LOS DEMAS DATOS
+                                cout << "Enter teacher nickname: " << endl;
+                                getline(cin, apodo);
+                                cin.get();
+
+                                cout << "Enter subject: " << endl;                                    
+                                getline(cin, asignatura);
+                                cin.get();
+
+                                if(asignatura.size() > 49){ // SI LA ASIGNATURA ES MAYOR A 49 CARACTERES, SE ACORTA A 49
+                                    asignatura = asignatura.substr(0, 48);
+                                } 
+                                else if(asignatura.empty()){ // SI NO SE INTRODUCE NINGUNA ASIGNATURA, SE MUESTRA UN ERROR
+                                    error(ERR_EMPTY);
+                                    salir = 1;
+                                }
+
+                                if (asignatura.size() <= 49 && !asignatura.empty()) {
+                                    do {
+                                        cout << "Enter rating: " << endl;
+                                        cin >> puntuacion;
+                                        cin.get();
+
+                                        if (puntuacion == NULL) { // SI NO SE INTRODUCE NINGUNA PUNTUACION, SE MUESTRA UN ERROR
+                                            puntuacion = 0;
+                                            salir = 1;
+                                        }
+                                        else if(puntuacion < 0 || puntuacion >= 5) { // SI LA PUNTUACION NO ESTA ENTRE 0 Y 5, SE MUESTRA UN ERROR
+                                            error(ERR_RATING);
+                                        }
+                                        else if(puntuacion >= 0 && puntuacion < 5){ // SI LA PUNTUACION ESTA ENTRE 0 Y 5, SE ALMACENA EL PROFESOR
+                                            profesor.name = nombre;
+                                            profesor.nickname = apodo;
+                                            for(int recorredor3 = 0; recorredor3 < asignatura.size(); recorredor3++){
+                                                profesor.subject[recorredor3] = asignatura[recorredor3];
+                                            }
+                                            profesor.rating = puntuacion;
+                                            listYears[recorredor].listTeachers.push_back(profesor);
+
+                                            cout<< "Teacher added" << endl << endl;
+
+                                            salir = 2;
+                                        }
+                                    } while (puntuacion < 0 || puntuacion >= 5); // SI LA PUNTUACION NO ESTA ENTRE 0 Y 5, SE VUELVE A PEDIR
+                                }
+                           }
+                        }
+                    } while (salir == 0); // SI SE AGREGA EL PROFESOR O HAY UN ERROR QUE IMPLIQUE SALIDA, SE SALE DEL BUCLE
+                }
+            }
+        }
+    } while (salir == 0 && seIntrodujo == 1); // SI NO SE AGREGA EL PROFESOR, SE VUELVE A PEDIR EL ID DEL ANYO
+}
