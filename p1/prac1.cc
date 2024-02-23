@@ -380,37 +380,34 @@ void addTeacher(vector<AcademicYear> &listYears){
 
 
 void deleteTeacher(vector<AcademicYear> &listYears){
-    int largo = listYears.size(), // LARGO DE LA LISTA DE ANYOS
-        seIntrodujo = 1, // VARIABLE PARA SABER SI SE INTRODUJO VARIABLES DE ANYOS
-        salir = 0, // VARIABLE PARA SALIR DEL BUCLE, 1 PARA SALIR POR ERROR, 2 PARA SALIR DESPUES DE AGREGAR EL PROFESOR
-        recorredor, // RECORREDOR PARA EL FOR
-        recorredor2; // RECORREDOR PARA EL FOR INTERNO 
-    float puntuacion; // VARIABLE PARA LA PUNTUACION DEL PROFESOR
+    int largo = listYears.size(), 
+        seIntrodujo = 1,
+        salir = 0, 
+        recorredor, 
+        recorredor2;
+    float puntuacion; 
     string nombre;
     
-    do{ // SE HACE UN DO WHILE PARA QUE SE VUELVA A PEDIR EL ID DEL ANYO SI NO SE ENCUENTRA
+    do{ 
         cout << "Enter teacher name: " << endl;
         getline(cin, nombre);
-        cin.get(); 
+        cin.get();
 
-        if(largo == 0){ // SI NO SE EXISTE NINGUN ANYO, SE MUESTRA UN ERROR
-            error(ERR_NOT_EXIST);
-            salir = 1;
-        }
-        if(nombre.empty()){ // SI NO SE INTRODUCE NINGUN ANYO, SE MUESTRA UN ERROR, EN ESTE CASO SE SALE DEL BUCLE DEVOLVIENDO EL ERROR
+        if(nombre.empty()){ 
             error(ERR_EMPTY);
             seIntrodujo = -1;
         }
-        
-        if (largo > 0 && seIntrodujo == 1) {
-            for (recorredor = 0; recorredor < largo && salir == 0; recorredor++) {
-                for (recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size(); recorredor2++) {
-                    if (listYears[recorredor].listTeachers[recorredor2].name == nombre) { // Compare teacher's name
-                        listYears[recorredor].listTeachers.erase(listYears[recorredor].listTeachers.begin() + recorredor2); // Erase the found teacher
-                        salir = 2;
+
+        if(largo > 0 && seIntrodujo == 1){
+            for(recorredor = 0; recorredor < largo && salir == 0; recorredor++){
+                for(recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size() && salir == 0; recorredor2++){
+                    if(listYears[recorredor].listTeachers[recorredor2].name == nombre){
+                        listYears[recorredor].listTeachers.erase(listYears[recorredor].listTeachers.begin() + recorredor2);
+                        salir = 1;
                     }
                 }
             }
         }
-    } while (salir == 0 && seIntrodujo == 1); // SI NO SE AGREGA EL PROFESOR, SE VUELVE A PEDIR EL ID DEL ANYO
+    } while(salir == 0 && seIntrodujo == 1);
+ 
 }
