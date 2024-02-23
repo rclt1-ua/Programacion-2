@@ -92,6 +92,7 @@ void showMenu(){
          << "Option: ";
 }
 
+
 // Función principal. Tendrás que añadir más código tuyo
 int main(){
     char option;
@@ -281,7 +282,8 @@ void addTeacher(vector<AcademicYear> &listYears){
         seIntrodujo = 1, // VARIABLE PARA SABER SI SE INTRODUJO VARIABLES DE ANYOS
         salir = 0, // VARIABLE PARA SALIR DEL BUCLE, 1 PARA SALIR POR ERROR, 2 PARA SALIR DESPUES DE AGREGAR EL PROFESOR
         idYInt, // VARIABLE PARA EL ANYO EN ENTERO
-        recorredor; // IDY PARA EL ID ANYO Y RECORREDOR PARA EL FOR
+        recorredor, // IDY PARA EL ID ANYO Y RECORREDOR PARA EL FOR
+        recorredor2;
     float puntuacion; // VARIABLE PARA LA PUNTUACION DEL PROFESOR
     string nombre, asignatura, apodo, idY; // VARIABLES PARA EL NOMBRE, ASIGNATURA, Y APODO DEL PROFESOR
     Teacher profesor; // VARIABLE PARA AÑADIR EL PROFESOR
@@ -302,7 +304,7 @@ void addTeacher(vector<AcademicYear> &listYears){
         if(largo > 0 && seIntrodujo == 1){
             idYInt = stoi(idY);
 
-            for(int recorredor = 0; recorredor < largo && salir == 0; recorredor++){
+            for(recorredor = 0; recorredor < largo && salir == 0; recorredor++){
                 if(listYears[recorredor].id == idYInt){ // SE BUSCA EL ANYO SEGUN EL ID    
                     do{
                         cout << "Enter teacher name: " << endl;
@@ -314,7 +316,7 @@ void addTeacher(vector<AcademicYear> &listYears){
                             salir = 1;
                         }
 
-                        for(int recorredor2 = 0; 
+                        for(recorredor2 = 0; 
                         (recorredor2 < listYears[recorredor].listTeachers.size()||listYears[recorredor].listTeachers.size() == 0) && salir == 0; 
                         recorredor2++){// SE BUSCA EL PROFESOR SEGUN SU NOMBRE
 
@@ -369,6 +371,44 @@ void addTeacher(vector<AcademicYear> &listYears){
                            }
                         }
                     } while (salir == 0); // SI SE AGREGA EL PROFESOR O HAY UN ERROR QUE IMPLIQUE SALIDA, SE SALE DEL BUCLE
+                }
+            }
+        }
+    } while (salir == 0 && seIntrodujo == 1); // SI NO SE AGREGA EL PROFESOR, SE VUELVE A PEDIR EL ID DEL ANYO
+}
+
+
+
+void deleteTeacher(vector<AcademicYear> &listYears){
+    int largo = listYears.size(), // LARGO DE LA LISTA DE ANYOS
+        seIntrodujo = 1, // VARIABLE PARA SABER SI SE INTRODUJO VARIABLES DE ANYOS
+        salir = 0, // VARIABLE PARA SALIR DEL BUCLE, 1 PARA SALIR POR ERROR, 2 PARA SALIR DESPUES DE AGREGAR EL PROFESOR
+        recorredor, // RECORREDOR PARA EL FOR
+        recorredor2; // RECORREDOR PARA EL FOR INTERNO 
+    float puntuacion; // VARIABLE PARA LA PUNTUACION DEL PROFESOR
+    string nombre;
+    
+    do{ // SE HACE UN DO WHILE PARA QUE SE VUELVA A PEDIR EL ID DEL ANYO SI NO SE ENCUENTRA
+        cout << "Enter teacher name: " << endl;
+        getline(cin, nombre);
+        cin.get(); 
+
+        if(largo == 0){ // SI NO SE EXISTE NINGUN ANYO, SE MUESTRA UN ERROR
+            error(ERR_NOT_EXIST);
+            salir = 1;
+        }
+        if(nombre.empty()){ // SI NO SE INTRODUCE NINGUN ANYO, SE MUESTRA UN ERROR, EN ESTE CASO SE SALE DEL BUCLE DEVOLVIENDO EL ERROR
+            error(ERR_EMPTY);
+            seIntrodujo = -1;
+        }
+        
+        if (largo > 0 && seIntrodujo == 1) {
+            for (recorredor = 0; recorredor < largo && salir == 0; recorredor++) {
+                for (recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size(); recorredor2++) {
+                    if (listYears[recorredor].listTeachers[recorredor2].name == nombre) { // Compare teacher's name
+                        listYears[recorredor].listTeachers.erase(listYears[recorredor].listTeachers.begin() + recorredor2); // Erase the found teacher
+                        salir = 2;
+                    }
                 }
             }
         }
