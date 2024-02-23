@@ -285,9 +285,8 @@ void addTeacher(vector<AcademicYear> &listYears){
         seIntrodujo = 1, // Variable para saber si se ha introducido un valor
         salir = 0, // Variable para salir del bucle. Salir 1 para salir por error, salir 2 para salir por éxito
         idYInt, // Variable para el año del curso académico en entero
-        recorredor, // Variable para recorrer el vector
-        recorredor2; // Variable para recorrer el vector
-    float puntuacionFl; // Variable para la puntuación del profesor
+        recorredor, recorredor2, // Variable para recorrer el vector. Recorredor para el vector de años, recorredor2 para el vector de profesores
+        puntuacionInt; // Variable para la puntuación del profesor
     string nombre, asignatura, apodo, idY, puntuacion; // Variables para el nombre, asignatura, apodo, año del curso académico y puntuación del profesor
     Teacher profesor; // Variable para el profesor
     
@@ -349,30 +348,30 @@ void addTeacher(vector<AcademicYear> &listYears){
                                         cin >> puntuacion; // Se introduce la puntuación del profesor
                                         cin.get(); // Se limpia el buffer de teclado
 
-                                        puntuacionFl = stof(puntuacion); // Se convierte la puntuación del profesor a float
+                                        puntuacionInt = stoi(puntuacion); // Se convierte la puntuación del profesor a int
                                     
                                         if (puntuacion.empty()) { // Si la puntuación del profesor está vacía, se muestra un mensaje de error   
-                                            puntuacionFl = 0; // Se cambia el valor de la variable "puntuacionFl"
-                                            salir = 1; // Se cambia el valor de la variable "salir"
+                                            puntuacionInt = 0; // Se cambia el valor de la variable puntuacionInt
+                                            salir = 1; // Se cambia el valor de la variable salir
                                         }
-                                        else if(puntuacionFl < 0 || puntuacionFl >= 5) { // Si la puntuación del profesor no está entre 0 y 5, se muestra un mensaje de error
+                                        else if(puntuacionInt < 0 || puntuacionInt >= 5) { // Si la puntuación del profesor no está entre 0 y 5, se muestra un mensaje de error
                                             error(ERR_RATING); // Se muestra un mensaje de error
-                                            puntuacionFl = -1; // Se cambia el valor de la variable "puntuacionFl"
+                                            puntuacionInt = -1; // Se cambia el valor de la variable puntuacionInt
                                         }
-                                        else if(puntuacionFl >= 0 && puntuacionFl < 5){ // Si la puntuación del profesor está entre 0 y 5, se añade el profesor
+                                        else if(puntuacionInt >= 0 && puntuacionInt < 5){ // Si la puntuación del profesor está entre 0 y 5, se añade el profesor
                                             profesor.name = nombre; // Se añade el nombre del profesor al registro
                                             profesor.nickname = apodo; // Se añade el apodo del profesor al registro
                                             for(int recorredor3 = 0; recorredor3 < asignatura.size(); recorredor3++){ // Se recorre la asignatura del profesor
                                                 profesor.subject[recorredor3] = asignatura[recorredor3]; // Se añade la asignatura del profesor al registro
                                             }
-                                            profesor.rating = puntuacionFl; // Se añade la puntuación en float del profesor al registro
+                                            profesor.rating = puntuacionInt; // Se añade la puntuación en int del profesor al registro
                                             listYears[recorredor].listTeachers.push_back(profesor); // Se añade el profesor al vector
 
                                             cout<< endl << "Teacher added" << endl << endl; // Se muestra un mensaje de éxito
 
-                                            salir = 2; // Se cambia el valor de la variable "salir"
+                                            salir = 2; // Se cambia el valor de la variable salir
                                         }
-                                    } while (puntuacionFl < 0 || puntuacionFl >= 5); 
+                                    } while (puntuacionInt < 0 || puntuacionInt >= 5); 
                                 }
                            }
                         }
@@ -390,9 +389,7 @@ void deleteTeacher(vector<AcademicYear> &listYears){
     int largo = listYears.size(), // Tamaño del vector
         seIntrodujo = 1, // Variable para saber si se ha introducido un valor
         salir = 0, // Variable para salir del bucle. Salir 1 para salir por error, salir 2 para salir por éxito
-        recorredor, // Variable para recorrer el vector
-        recorredor2; // Variable para recorrer el vector
-    float puntuacion; // Variable para la puntuación del profesor
+        recorredor, recorredor2; // Variables para recorrer el vector. Recorredor para el vector de años, recorredor2 para el vector de profesores
     string nombre; // Variable para el nombre del profesor
     
     do{ // Bucle para introducir el nombre del profesor
@@ -427,3 +424,87 @@ void deleteTeacher(vector<AcademicYear> &listYears){
         }
     } while(salir == 0 && seIntrodujo == 1); // Mientras no se haya eliminado el profesor y se haya introducido un valor
 }
+
+
+
+//FUNCION PARA MOSTRAR TODOS LOS DATOS DE UN PROFESOR
+void showTeacher(vector<AcademicYear> &listYears){
+    int largo = listYears.size(), // Tamaño del vector
+        encontrado = -1, // Variable para saber si se ha encontrado el profesor
+        seIntrodujo = 1, // Variable para saber si se ha introducido un valor
+        salir = 0, // Variable para salir del bucle. Salir 1 para salir por error, salir 2 para salir por éxito
+        idY, recorredor1, recorredor2, recorredor3; // Variables para el año del curso académico. Recorredor1 para el vector de años, recorredor2 para el vector de profesores, recorredor3 para el vector de frases
+    string nombre; // Variable para el nombre del profesor
+
+
+    do{ // Bucle para introducir el nombre del profesor
+        cout << "Enter teacher name: " << endl; // Se pide el nombre del profesor
+        getline(cin, nombre); // Se introduce el nombre del profesor con getline para evitar problemas con el buffer de teclado
+        cin.get(); // Se limpia el buffer de teclado
+
+        if(nombre.empty()){ // Si el nombre del profesor está vacío, se muestra un mensaje de error
+            error(ERR_EMPTY); // Se muestra un mensaje de error
+            seIntrodujo = -1; // Se cambia el valor de la variable "seIntrodujo"
+            salir = 1; // Se cambia el valor de la variable "salir"
+        }
+
+        if(largo == 0){ // Si el vector está vacío, se muestra un mensaje de error
+            error(ERR_NOT_EXIST); // Se muestra un mensaje de error
+            salir = 1; // Se cambia el valor de la variable "salir"
+        } 
+        else{ // Si el vector no está vacío y se ha introducido un valor
+            for(recorredor1 = 0; recorredor1 < largo && salir == 0; recorredor1++){ // Se recorre el vector para comprobar si existe el profesor
+                for(recorredor2 = 0; recorredor2 < listYears[recorredor1].listTeachers.size() && salir == 0; recorredor2++){ // Se recorre el vector para comprobar si existe el profesor
+                    if(listYears[recorredor1].listTeachers[recorredor2].name == nombre){ // Si existe el profesor, se elimina
+                        cout << "Academica Year: " << listYears[recorredor1].id << endl; // Se muestra el año académico
+                        cout << "Name: " << listYears[recorredor1].listTeachers[recorredor2].name << endl; // Se muestra el nombre del profesor
+                        
+                        if(listYears[recorredor1].listTeachers[recorredor2].nickname != ""){// Si el apodo del profesor no está vacío, se muestra
+                            cout << "Nickname: " << listYears[recorredor1].listTeachers[recorredor2].nickname << endl; // Se muestra el apodo del profesor
+                        }
+
+                        cout << "Subject: " << listYears[recorredor1].listTeachers[recorredor2].subject << endl; // Se muestra la asignatura del profesor
+                        
+                        if(listYears[recorredor1].listTeachers[recorredor2].rating != 0){ // Si el rating del profesor no es 0, se muestra
+                            cout << "Rating: " ;
+                            for(recorredor3 = 0; recorredor3 < listYears[recorredor1].listTeachers[recorredor2].rating; recorredor3++){ // Se muestra el rating del profesor
+                                cout << "*";
+                            }
+                            cout << endl;
+                        }
+                    
+                        cout << endl;
+
+                        for (recorredor3 = 0; recorredor3 < listYears[recorredor1].listTeachers[recorredor2].listPhrases.size(); recorredor3++) { // Se recorre el vector para mostrar las frases del profesor
+                            cout << "Phrase: " << recorredor3 + 1; // Se muestra el número de frase
+
+                            if (listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3].date.day != 0) { // Si la fecha no es igual a cero, se muestra
+                                cout << " (" << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3].date.day  // Se muestra la fecha de la frase
+                                << "-" << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3].date.month // Se muestra la fecha de la frase
+                                << "-" << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3].date.year << " "; // Se muestra la fecha de la frase
+                            } 
+                            else{ // Si la fecha está vacía, se muestra un espacio
+                                cout << " "; // Se muestra un espacio
+                            }
+
+                            if(listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3].rating != 0){ // Si el rating de la frase no es 0, se muestra
+                                cout << "[" 
+                                << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3].rating // Se muestra el rating de la frase
+                                << "] : "; 
+                            }
+                            else{ // Si el rating de la frase es 0, se muestra un espacio
+                                cout << ": "; // Se muestra dos puntos y un espacio
+                            }
+
+                            cout << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3].text << endl; // Se muestra el texto de la frase
+
+                            salir = 2;
+                        }
+
+                    }
+                }
+            }
+        }
+    } while(salir == 0 && seIntrodujo == 1); // Mientras no se haya eliminado el profesor y se haya introducido un valor
+}
+
