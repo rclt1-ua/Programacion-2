@@ -140,25 +140,32 @@ int main(){
 void addAcademicYear(vector<AcademicYear> &listYears){
     int largo = listYears.size(), // LARGO DE LA LISTA DE ANYOS
         encontrado = -1, // VARIABLE PARA SABER SI EL ANYO YA EXISTE
-        idY, recorredor; // IDY PARA EL ID ANYO Y RECORREDOR PARA EL FOR
+        recorredor; // RECORREDOR PARA EL FOR
+    string idY; // VARIABLE PARA AÑADIR EL ANYO
+    int idYInt; // VARIABLE PARA AÑADIR EL ANYO EN ENTERO
     AcademicYear anyo; // VARIABLE PARA AÑADIR EL ANYO
     
 
     cout<< "Introduce el año del curso académico: " << endl;
-    cin >> idY;
+    getline(cin, idY);
 
-    if(idY == 0){ // SI NO SE INTRODUCE NINGUN ANYO, SE MUESTRA UN ERROR
+
+
+    if(largo ==0){ // SI NO SE ENCUENTRA NINGUN ANYO, SE AGREGA DIRECTAMENTE EL ANYO
+        idYInt = stoi(idY);
+        anyo.id = idYInt;
+        listYears.push_back(anyo);
+    } 
+
+    if(idY.empty()){ // SI NO SE INTRODUCE NINGUN ANYO, SE MUESTRA UN ERROR
         error(ERR_EMPTY);
         cout << endl;
     }
-
-    if(largo ==0){ // SI NO SE ENCUENTRA NINGUN ANYO, SE AGREGA DIRECTAMENTE EL ANYO
-        anyo.id = idY;
-        listYears.push_back(anyo);
-    } 
     else{ // SI HAY DATOS, SE COMPRUEBA QUE NO EXISTA EL ANYO DENTRO DEL VECTOR
+        idYInt = stoi(idY);
+
         for(recorredor = 0; recorredor < largo && !encontrado == -1; recorredor++){
-            if(listYears[recorredor].id == idY){
+            if(listYears[recorredor].id == idYInt){
                 encontrado = 1; // SI SE ENCUENTRA EL ANYO, SE CAMBIA EL VALOR DE LA VARIABLE PARA SABER QUE YA EXISTE
             }
         }
@@ -168,7 +175,7 @@ void addAcademicYear(vector<AcademicYear> &listYears){
             cout << endl;
         }
         else{ // SI NO SE ENCUENTRA EL ANYO, SE AGREGA EL ANYO
-            anyo.id = idY;
+            anyo.id = idYInt;
             listYears.push_back(anyo);
         }
     }
@@ -178,25 +185,31 @@ void addAcademicYear(vector<AcademicYear> &listYears){
 void addAcademicYear(vector<AcademicYear> *listYears){
     int largo = listYears->size(), // LARGO DE LA LISTA DE ANYOS
         encontrado = -1, // VARIABLE PARA SABER SI EL ANYO YA EXISTE
-        idY, recorredor; // IDY PARA EL ID ANYO Y RECORREDOR PARA EL FOR
+        recorredor; // IDY PARA EL ID ANYO Y RECORREDOR PARA EL FOR
+    string idY;
+    int idYInt;
     AcademicYear anyo; // VARIABLE PARA AÑADIR EL ANYO
     
 
     cout<< "Introduce el año del curso académico: " << endl;
-    cin >> idY;
+    getline(cin, idY);
 
-    if(idY == 0){ // SI NO SE INTRODUCE NINGUN ANYO, SE MUESTRA UN ERROR
+
+    if(largo ==0){ // SI NO SE ENCUENTRA NINGUN ANYO, SE AGREGA DIRECTAMENTE EL ANYO
+        idYInt = stoi(idY);
+        anyo.id = idYInt;
+        listYears->push_back(anyo);
+    } 
+
+    if(idY.empty()){ // SI NO SE INTRODUCE NINGUN ANYO, SE MUESTRA UN ERROR
         error(ERR_EMPTY);
         cout << endl;
     }
-
-    if(largo ==0){ // SI NO SE ENCUENTRA NINGUN ANYO, SE AGREGA DIRECTAMENTE EL ANYO
-        anyo.id = idY;
-        listYears->push_back(anyo);
-    } 
     else{ // SI HAY DATOS, SE COMPRUEBA QUE NO EXISTA EL ANYO DENTRO DEL VECTOR
+        idYInt = stoi(idY); // CONVERTIR DE STRING A ENTERO
+
         for(recorredor = 0; recorredor < largo && !encontrado == -1; recorredor++){
-            if((*listYears)[recorredor].id == idY) {
+            if((*listYears)[recorredor].id == idYInt) {
                 encontrado = 1; // SI SE ENCUENTRA EL ANYO, SE CAMBIA EL VALOR DE LA VARIABLE PARA SABER QUE YA EXISTE
             }
         }
@@ -206,7 +219,7 @@ void addAcademicYear(vector<AcademicYear> *listYears){
             cout << endl;
         }
         else{ // SI NO SE ENCUENTRA EL ANYO, SE AGREGA EL ANYO
-            anyo.id = idY;
+            anyo.id = idYInt;
             listYears->push_back(anyo);
         }
     }
