@@ -517,7 +517,8 @@ void addPhrase(vector<AcademicYear> &listYears){
         salir = 0, // Variable para salir del bucle. Salir 1 para salir por error, salir 2 para salir por éxito
         recorredor, recorredor2, recorredor3, // Variables para recorrer el vector. Recorredor para el vector de años, recorredor2 para el vector de profesores, 
                                               // recorredor3 para el vector de frase introducida
-        dia, mes, anyo, contador = 0; // Variables para el día, mes y año en int. COontador para saber si se ha introducido el guion
+        dia, mes, anyo, contador = 0, // Variables para el día, mes y año en int. COontador para saber si se ha introducido el guion
+        puntFra; // Variable para la puntuación de la frase
     char guion; // Variable para el guion
     string nombre, frasest, fecha, // Variable para el nombre del profesor y para la frase
         diaStr, mesStr, anyoStr; // Variables para el día, mes y año en string
@@ -537,7 +538,8 @@ void addPhrase(vector<AcademicYear> &listYears){
         if(largo == 0){ // Si el vector está vacío, se muestra un mensaje de error
             error(ERR_NOT_EXIST); // Se muestra un mensaje de error
             salir = 1; // Se cambia el valor de la variable "salir"
-        } else{ // Si el vector no está vacío y se ha introducido un valor
+        } 
+        else{ // Si el vector no está vacío y se ha introducido un valor
             for(recorredor = 0; recorredor < largo && salir == 0; recorredor++){ // Se recorre el vector para comprobar si existe el profesor
                 for(recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size() && salir == 0; recorredor2++){ // Se recorre el vector para comprobar si existe el profesor
                     if(listYears[recorredor].listTeachers[recorredor2].name == nombre){ // Si existe el profesor, se elimina
@@ -549,44 +551,63 @@ void addPhrase(vector<AcademicYear> &listYears){
                             error(ERR_EMPTY); // Se muestra un mensaje de error
                             seIntrodujo = -1; // Se cambia el valor de la variable "seIntrodujo"
                             salir = 1; // Se cambia el valor de la variable "salir"
-                        } else{
+                        } 
+                        else{
                             frase.text = frasest; // Se introduce la frase en el registro
+
                             cout << "Enter date (year-month-day):" << endl; // Se pide la fecha
                             getline(cin, fecha); // Se introduce la fecha con getline para evitar problemas con el buffer de teclado
                             cin.get(); // Se limpia el buffer de teclado
 
                             if(fecha.empty()){
-                                error(ERR_EMPTY); // Se muestra un mensaje de error
-                                seIntrodujo = -1; // Se cambia el valor de la variable "seIntrodujo"
-                                salir = 1; // Se cambia el valor de la variable "salir"
-                            } else{
+                                frase.date.year = 0;
+                                frase.date.month = 0;
+                                frase.date.day = 0;
+
+                            } 
+                            else{
                                 for(recorredor3 = 0; recorredor3 < fecha.size() && contador < 2; recorredor3++){
                                     if(fecha[recorredor3] == '-' && contador == 0){
                                         contador++;
                                         anyoStr = fecha.substr(0, recorredor3);
                                         anyo = stoi(anyoStr);
+                                        frase.date.year = anyo;
                                     }
                                     else if(fecha[recorredor3] == '-' && contador == 1){
                                         contador++;
                                         mesStr = fecha.substr(anyoStr.size() + 1, recorredor3 - anyoStr.size() - 1);
                                         mes = stoi(mesStr);
+                                        frase.date.month = mes;
                                         diaStr = fecha.substr(recorredor3 + 1, fecha.size() - recorredor3 - 1);
                                         dia = stoi(diaStr);
+                                        frase.date.day = dia;
                                     }
                                 }
-                                salir = 2;
                             }
 
-                            if(salir == 2){
-                                frase.date.year = anyo;
-                                frase.date.month = mes;
-                                frase.date.day = dia;
-                                listYears[recorredor].listTeachers[recorredor2].listPhrases.push_back(frase);
-                            }
+                            do{
+                                cout << "Enter rating: " << endl; // Se pide la puntuación
+                                cin >> puntFra; // Se introduce la puntuación
+                                cin.get(); // Se limpia el buffer de teclado
+
+                                if(puntFra < 0 || puntFra > 10){
+                                    error(ERR_RATING); // Se muestra un mensaje de error
+                                }
+                                else{
+                                    frase.rating = puntFra; // Se introduce la puntuación en el registro
+                                    listYears[recorredor].listTeachers[recorredor2].listPhrases.push_back(frase); // Se añade la frase al vector
+
+                                    cout << endl << "Phrase added" << endl << endl; // Se muestra un mensaje de éxito
+
+                                    salir = 2; // Se cambia el valor de la variable "salir"
+                                }
+
+                            } while(puntFra < 0 || puntFra > 10);
                         }
                     }
                 }
             }
+
             if(salir == 0){ // Si no existe el profesor, se muestra un mensaje de error
                 error(ERR_NOT_EXIST); // Se muestra un mensaje de error
             } 
@@ -598,5 +619,3 @@ void addPhrase(vector<AcademicYear> &listYears){
 }
 
 
-
-////////////////////////////// NO SE HA TERMINADO ADD PHRASE
