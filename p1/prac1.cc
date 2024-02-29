@@ -433,12 +433,12 @@ void showTeacher(vector<AcademicYear> &listYears){
                             cout << endl;
                         if(listYears[recorredor1].listTeachers[recorredor2].listPhrases.size() > 0){ // Si el vector de frases del profesor no está vacío, se muestra
                             for (size_t recorredor3U = 0; recorredor3U < listYears[recorredor1].listTeachers[recorredor2].listPhrases.size(); recorredor3U++) { // Se recorre el vector para mostrar las frases del profesor
-                                cout << "Phrase " << recorredor3U + 1 << ":"; // Se muestra el número de frase
+                                cout << "Phrase " << recorredor3U + 1; // Se muestra el número de frase
 
                                 if (listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3U].date.day != 0) { // Si la fecha no es igual a cero, se muestra
-                                    cout << " (" << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3U].date.day  // Se muestra la fecha de la frase
+                                    cout << " (" << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3U].date.year  // Se muestra la fecha de la frase
                                     << "-" << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3U].date.month // Se muestra la fecha de la frase
-                                    << "-" << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3U].date.year << " "; // Se muestra la fecha de la frase
+                                    << "-" << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3U].date.day << ") "; // Se muestra la fecha de la frase
                                 } 
                                 else{ // Si la fecha está vacía, se muestra un espacio
                                     cout << " "; // Se muestra un espacio
@@ -447,7 +447,7 @@ void showTeacher(vector<AcademicYear> &listYears){
                                 if(listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3U].rating != 0){ // Si el rating de la frase no es 0, se muestra
                                     cout << "[" 
                                     << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3U].rating // Se muestra el rating de la frase
-                                    << "] : "; 
+                                    << "]: "; 
                                 }
                                 else{ // Si el rating de la frase es 0, se muestra un espacio
                                     cout << ": "; // Se muestra dos puntos y un espacio
@@ -456,11 +456,12 @@ void showTeacher(vector<AcademicYear> &listYears){
                                 cout << listYears[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3U].text << endl; // Se muestra el texto de la frase
                                 
                                 eliminado = true; // Se cambia el valor de la variable eliminado
-                                return;
                             }
                         } 
                         else{
                             eliminado = true; // Se cambia el valor de la variable eliminado
+                        }
+                        if(eliminado){
                             return;
                         }
                     }
@@ -480,56 +481,52 @@ void showTeacher(vector<AcademicYear> &listYears){
 //FUNCION PARA BORRAR UN PROFESOR
 void addPhrase(vector<AcademicYear> &listYears){
     int largo = listYears.size(), // Tamaño del vector
-        seIntrodujo = 1, // Variable para saber si se ha introducido un valor
-        salir = 0, // Variable para salir del bucle. 
         recorredor, // Variable para recorrer el vector
         dia, mes, anyo, contador = 0, // Variables para el día, mes y año en int. COontador para saber si se ha introducido el guion
         puntFra; // Variable para la puntuación de la frase
     size_t recorredor2, recorredor3; // Variable para recorrer el vector de profesores y frases
+    bool seIntrodujo, // Variable para saber si se ha introducido un valor
+        salir; // Variable para salir del bucle. 
     string nombre, frasest, fecha, // Variable para el nombre del profesor y para la frase
         diaStr, mesStr, anyoStr, // Variables para el día, mes y año en string
         puntFraStr; // Variable para la puntuación de la frase en string
     Phrase frase; // Variable para la frase
 
     do{ // Bucle para introducir el nombre del profesor
-        cout << "Enter teacher name: " << endl; // Se pide el nombre del profesor
-        getline(cin, nombre); // Se introduce el nombre del profesor con getline para evitar problemas con el buffer de teclado
+        seIntrodujo = true;
+        salir = false; 
+
+        cout << "Enter teacher name: "; // Se pide el nombre del profesor
+            getline(cin, nombre); // Se introduce el nombre del profesor con getline para evitar problemas con el buffer de teclado
 
         if(nombre.empty()){ // Si el nombre del profesor está vacío, se muestra un mensaje de error
-            cout << endl; // Se imprime un salto de línea para mejorar la legibilidad
             error(ERR_EMPTY); // Se muestra un mensaje de error
-            cout << endl; // Se imprime un salto de línea para mejorar la legibilidad
-
-            seIntrodujo = -1; // Se cambia el valor de la variable "seIntrodujo"
-            salir = 1; // Se cambia el valor de la variable "salir"
+                seIntrodujo = false; // Se cambia el valor de la variable SeIntrodujo
+                salir = true; // Se cambia el valor de la variable salir
+            return;
         }
 
         if(largo == 0){ // Si el vector está vacío, se muestra un mensaje de error       
-            cout << endl; // Se imprime un salto de línea para mejorar la legibilidad
             error(ERR_NOT_EXIST); // Se muestra un mensaje de error
-            cout << endl; // Se imprime un salto de línea para mejorar la legibilidad
-
-            salir = 1; // Se cambia el valor de la variable "salir"
+            salir = true;
         } 
         else{ // Si el vector no está vacío y se ha introducido un valor
-            for(recorredor = 0; recorredor < largo && salir == 0; recorredor++){ // Se recorre el vector para comprobar si existe el profesor
-                for(recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size() && salir == 0; recorredor2++){ // Se recorre el vector para comprobar si existe el profesor
+            for(recorredor = 0; recorredor < largo && !salir; recorredor++){ // Se recorre el vector para comprobar si existe el profesor
+                for(recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size() && !salir; recorredor2++){ // Se recorre el vector para comprobar si existe el profesor
                     if(listYears[recorredor].listTeachers[recorredor2].name == nombre){ // Si existe el profesor, se elimina
-                        cout << "Enter phrase: " << endl; // Se pide la frase
-                        getline(cin, frasest); // Se introduce la frase con getline para evitar problemas con el buffer de teclado
+                        cout << "Enter phrase: "; // Se pide la frase
+                            getline(cin, frasest); // Se introduce la frase con getline para evitar problemas con el buffer de teclado
 
                         if(frasest.empty()){
-                            cout << endl; // Se imprime un salto de línea para mejorar la legibilidad
                             error(ERR_EMPTY); // Se muestra un mensaje de error
-                            cout << endl; // Se imprime un salto de línea para mejorar la legibilidad
-
-                            seIntrodujo = -1; // Se cambia el valor de la variable "seIntrodujo"
-                            salir = 1; // Se cambia el valor de la variable "salir"
+                                seIntrodujo = false; // Se cambia el valor de la variable seIntrodujo
+                                salir = true; // Se cambia el valor de la variable salir
+                            return;
                         } 
                         else{
                             frase.text = frasest; // Se introduce la frase en el registro
 
-                            cout << "Enter date (year-month-day):" << endl; // Se pide la fecha
+                            cout << "Enter date (year-month-day):"; // Se pide la fecha
                             getline(cin, fecha); // Se introduce la fecha con getline para evitar problemas con el buffer de teclado
 
                             if(fecha.empty()){
@@ -558,8 +555,8 @@ void addPhrase(vector<AcademicYear> &listYears){
                             }
 
                             do{
-                                cout << "Enter rating: " << endl; // Se pide la puntuación
-                                cin >> puntFraStr; // Se introduce la puntuación
+                                cout << "Enter rating: "; // Se pide la puntuación
+                                getline(cin, puntFraStr); // Se introduce la puntuación
 
                                 if(puntFraStr.empty()){
                                     puntFra = 0;
@@ -569,17 +566,12 @@ void addPhrase(vector<AcademicYear> &listYears){
                                 }
 
                                 if(puntFra < 0 || puntFra > 10){
-                                    cout << endl; // Se imprime un salto de línea para mejorar la legibilidad
                                     error(ERR_RATING); // Se muestra un mensaje de error
-                                    cout << endl; // Se imprime un salto de línea para mejorar la legibilidad
                                 }
                                 else{
                                     frase.rating = puntFra; // Se introduce la puntuación en el registro
                                     listYears[recorredor].listTeachers[recorredor2].listPhrases.push_back(frase); // Se añade la frase al vector
-
-                                    cout << endl << "Phrase added" << endl << endl; // Se muestra un mensaje de éxito
-
-                                    salir = 2; // Se cambia el valor de la variable "salir"
+                                        salir = true; // Se cambia el valor de la variable "salir"
                                 }
 
                             } while(puntFra < 0 || puntFra > 10); // Mientras la puntuación no esté entre 0 y 10
@@ -588,49 +580,42 @@ void addPhrase(vector<AcademicYear> &listYears){
                 }
             }
         }
-    } while(salir == 0 && seIntrodujo == 1); // Mientras no se haya añadido la frase y se haya introducido un valor
+    } while(!salir && seIntrodujo); // Mientras no se haya añadido la frase y se haya introducido un valor
 }
 
 
 
 //FUNCION PARA MOSTRAR UN RESUMEN DE TODAS LAS FRASES DE TODOS LOS CURSOS
 void summary(vector<AcademicYear> &listYears){
-    AcademicYear auxi; // Variable auxiliar para almacenar los elementos ordenados 
-    vector<AcademicYear> listAux; // Vector auxiliar para modificar y ordenar los datos del vector original
-    int recorredor1, // Variable para recorrer el vector
-        largo = listAux.size(), // La longitud del vector auxiliar
-        recorredor2I; // Variable para recorrer el vector de profesores int para evitar warnings
-    size_t recorredor2, recorredor3; // Variable para recorrer el vector de profesores y frases
-    
+    int largo = listYears.size(), // Tamaño del vector
+        recorredor; // Variable para recorrer el vector
+    size_t recorredor2, // Variable para recorrer el vector de profesores
+            recorredor4; // Variable para recorrer el vector de frases
+    string asignatura; // Variable para la asignatura del profesor
 
-
-    listAux = listYears; // Se copia el vector original al vector auxiliar
-
-    for (recorredor1 = 0; recorredor1 < largo - 1; recorredor1++) {         
-        for (recorredor2I = 0; recorredor2I < largo- recorredor1 - 1; recorredor2I++) {
-            if (listAux[recorredor2I].id < listAux[recorredor2I + 1].id) {
-                // Intercambiar elementos si están en el orden incorrecto
-                auxi = listAux[recorredor2I];
-                listAux[recorredor2I] = listAux[recorredor2I + 1];
-                listAux[recorredor2I + 1] = auxi;
-            }
-        }
+    if(largo == 0){ // Si el vector está vacío, se muestra un mensaje de error
+        error(ERR_NOT_EXIST); // Se muestra un mensaje de error
+        return;
     }
 
-    for(recorredor1 = 0; recorredor1 < largo; recorredor1++){ // Se recorre el vector de anyos
-        cout<< "Academic Year: " << listAux[recorredor1].id << endl; // Se muestra el anyo
-        
-        for(recorredor2 = 0; recorredor2 < listAux[recorredor1].listTeachers.size(); recorredor2++){ // Se recorre el vector de profesores
-            for(recorredor3 = 0; recorredor3 < listAux[recorredor1].listTeachers[recorredor2].listPhrases.size(); recorredor3++){ // Se recorre el vector de frases
-                cout << listAux[recorredor1].listTeachers[recorredor2].name << " - "; // Se muestra el nombre del profesor
+    for(recorredor = 0; recorredor < largo; recorredor++){ // Se recorre el vector para mostrar el resumen
+        cout << "Academic year: " << listYears[recorredor].id << endl; // Se muestra el año académico
+        for(recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size(); recorredor2++){ // Se recorre el vector para mostrar el resumen
+            if(listYears[recorredor].listTeachers[recorredor2].listPhrases.size() > 0){ // Si el vector de frases del profesor no está vacío, se muestra
+                for (recorredor4 = 0; recorredor4 < listYears[recorredor].listTeachers[recorredor2].listPhrases.size(); recorredor4++) { // Se recorre el vector para mostrar las frases del profesor
+                    cout << listYears[recorredor].listTeachers[recorredor2].name; // Se muestra el nombre del profesor
 
-                if(listAux[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3].rating > 0){ // Se muestra la valoracion de la frase si es mayor a 0
-                    cout << listAux[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3].rating << " - "; // Se muestra la valoracion de la frase
+                    if(listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor4].rating != 0){ // Si el rating de la frase no es 0, se muestra
+                        cout << " - " 
+                        << listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor4].rating // Se muestra el rating de la frase
+                        << " - "; 
+                    }
+                    else{ // Si el rating de la frase es 0, se muestra un espacio
+                        cout << " - "; // Se muestra dos puntos y un espacio
+                    }
+                    cout << listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor4].text << endl; // Se muestra el texto de la frase
                 }
-            
-                cout << listAux[recorredor1].listTeachers[recorredor2].listPhrases[recorredor3].text << endl; // Se muestra la frase
             }
         }
     }
-
 }
