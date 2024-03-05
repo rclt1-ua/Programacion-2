@@ -128,7 +128,7 @@ int main(){
             default: 
                 error(ERR_OPTION);
         }
-    }while(option!='q');
+    }while(option!='q' && option!='Q');
 }
 
 //FUNCION PARA AÑADIR UN CURSO ACADEMICO
@@ -140,7 +140,7 @@ void addAcademicYear(vector<AcademicYear> &listYears){
     string idY; // Variable para el año del curso académico en string
     AcademicYear anyo; // Variable para el curso académico
     
-    do{
+    do{ 
         encontrado = false;
         cout<< "Enter academic year:";
             getline(cin, idY); // Se introduce el año del curso académico con getline para evitar problemas con el buffer de teclado
@@ -215,7 +215,7 @@ void deleteAcademicYear(vector<AcademicYear> &listYears){
             if(!eliminado){ // Si no existe el curso académico y no se elimina, se muestra un mensaje de error
                 error(ERR_NOT_EXIST); // Se muestra un mensaje de error
             }
-        }
+        }  
     } 
     while(!eliminado && seIntrodujo); // Mientras no se haya eliminado el curso académico y se haya introducido un valor
 }
@@ -464,12 +464,6 @@ void showTeacher(vector<AcademicYear> &listYears){
     } while(!mostrado && seIntrodujo);
 }
 
-
-
-
-
-
-
 //FUNCION PARA BORRAR UN PROFESOR
 void addPhrase(vector<AcademicYear> &listYears){
     int largo = listYears.size(), // Tamaño del vector
@@ -542,7 +536,7 @@ void addPhrase(vector<AcademicYear> &listYears){
                                         diaStr = fecha.substr(recorredor3 + 1, fecha.size() - recorredor3 - 1);
                                         dia = stoi(diaStr);
                                         frase.date.day = dia;
-                                    }
+                                    } 
                                 }
                             }
 
@@ -575,8 +569,6 @@ void addPhrase(vector<AcademicYear> &listYears){
     } while(!salir && seIntrodujo); // Mientras no se haya añadido la frase y se haya introducido un valor
 }
 
-
-
 //FUNCION PARA MOSTRAR UN RESUMEN DE TODAS LAS FRASES DE TODOS LOS CURSOS
 void summary(vector<AcademicYear> &listYears){
     int largo = listYears.size(), // Tamaño del vector
@@ -591,9 +583,9 @@ void summary(vector<AcademicYear> &listYears){
     }
 
     for(recorredor = 0; recorredor < largo; recorredor++){ // Se recorre el vector para mostrar el resumen
-        cout << "Academic year: " << listYears[recorredor].id << endl; // Se muestra el año académico
         for(recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size(); recorredor2++){ // Se recorre el vector para mostrar el resumen
             if(listYears[recorredor].listTeachers[recorredor2].listPhrases.size() > 0){ // Si el vector de frases del profesor no está vacío, se muestra
+                cout << "Academic year: " << listYears[recorredor].id << endl; // Se muestra el año académico
                 for (recorredor4 = 0; recorredor4 < listYears[recorredor].listTeachers[recorredor2].listPhrases.size(); recorredor4++) { // Se recorre el vector para mostrar las frases del profesor
                     cout << listYears[recorredor].listTeachers[recorredor2].name; // Se muestra el nombre del profesor
 
