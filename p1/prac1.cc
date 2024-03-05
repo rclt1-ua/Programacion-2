@@ -123,12 +123,10 @@ int main(){
                 break;
             case 'q': // Salir del programa si se introduce la opción 'q'
                 break;
-            case 'Q': // Salir del programa si se introduce la opción 'Q' para tomar en cuenta mayúsculas
-                break;
             default: 
                 error(ERR_OPTION);
         }
-    }while(option!='q' && option!='Q');
+    }while(option!='q');
 }
 
 //FUNCION PARA AÑADIR UN CURSO ACADEMICO
@@ -576,6 +574,7 @@ void summary(vector<AcademicYear> &listYears){
     size_t recorredor2, // Variable para recorrer el vector de profesores
             recorredor4; // Variable para recorrer el vector de frases
     string asignatura; // Variable para la asignatura del profesor
+    bool anyoImpreso;
 
     if(largo == 0){ // Si el vector está vacío, se muestra un mensaje de error
         error(ERR_NOT_EXIST); // Se muestra un mensaje de error
@@ -583,9 +582,15 @@ void summary(vector<AcademicYear> &listYears){
     }
 
     for(recorredor = 0; recorredor < largo; recorredor++){ // Se recorre el vector para mostrar el resumen
+        anyoImpreso = false;
+
         for(recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size(); recorredor2++){ // Se recorre el vector para mostrar el resumen
             if(listYears[recorredor].listTeachers[recorredor2].listPhrases.size() > 0){ // Si el vector de frases del profesor no está vacío, se muestra
-                cout << "Academic year: " << listYears[recorredor].id << endl; // Se muestra el año académico
+                
+                if(!anyoImpreso){
+                    cout << "Academic year: " << listYears[recorredor].id << endl; // Se muestra el año académico
+                }
+
                 for (recorredor4 = 0; recorredor4 < listYears[recorredor].listTeachers[recorredor2].listPhrases.size(); recorredor4++) { // Se recorre el vector para mostrar las frases del profesor
                     cout << listYears[recorredor].listTeachers[recorredor2].name; // Se muestra el nombre del profesor
 
@@ -599,6 +604,8 @@ void summary(vector<AcademicYear> &listYears){
                     }
                     cout << listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor4].text << endl; // Se muestra el texto de la frase
                 }
+
+                anyoImpreso = true;
             }
         }
     }
