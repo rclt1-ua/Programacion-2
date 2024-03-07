@@ -568,22 +568,6 @@ void addPhrase(vector<AcademicYear> &listYears){
     } while(!salir && seIntrodujo); // Mientras no se haya añadido la frase y se haya introducido un valor
 }
 
-//FUNCION PARA ORDENAR LOS CURSOS ACADEMICOS
-void Ordenar(vector<AcademicYear>& listYears) {
-    int largo = listYears.size(), // Tamaño del vector
-        recorredor, recorredor2; // Variable para recorrer el vector
-    AcademicYear auxiliar;// Variable para guardar el valor durante el intercambio
- 
-    for (recorredor = 0; recorredor < largo - 1; recorredor++) { // Se recorre el vector para ordenar los cursos académicos
-        for (recorredor2 = 0; recorredor2 < largo - recorredor - 1; recorredor2++) { // Se obtiene posiciones para ordenar
-            if (listYears[recorredor2].id < listYears[recorredor2 + 1].id) { // Se compara el valor actual con el siguiente
-                auxiliar = listYears[recorredor2]; // Se guarda el valor actual
-                listYears[recorredor2] = listYears[recorredor2 + 1]; // Se intercambian los valores
-                listYears[recorredor2 + 1] = auxiliar; // Se intercambian los valores
-            }
-        }
-    }
-}
 
 
 
@@ -592,9 +576,11 @@ void summary(vector<AcademicYear>& listYears) {
     int largo = listYears.size(); // Tamaño del vector
     int recorredor; // Variable para recorrer el vector
     size_t recorredor2, // Variable para recorrer el vector de profesores
-        recorredor3; // Variable para recorrer el vector de frases
+        recorredor3, // Variable para recorrer el vector de frases
+        recorredor 4, recorredor5; // Variable para recorrer el vector y ordenar
     string asignatura; // Variable para la asignatura del profesor
     bool anyoImpreso;
+    AcademicYear auxiliar; // Variable para guardar el valor durante el intercambio
 
     if (largo == 0) { // Si el vector está vacío, se muestra un mensaje de error
         error(ERR_NOT_EXIST); // Se muestra un mensaje de error
@@ -602,13 +588,15 @@ void summary(vector<AcademicYear>& listYears) {
     }
 
 
-
-
-
-
-
-
-    Ordenar(listYears);
+    for (recorredor4 = 0; recorredor4 < largo - 1; recorredor4++) { // Se recorre el vector para ordenar los cursos académicos
+        for (recorredor5 = 0; recorredor5 < largo - recorredor4 - 1; recorredor5++) { // Se obtiene posiciones para ordenar
+            if (listYears[recorredor5].id < listYears[recorredor5 + 1].id) { // Se compara el valor actual con el siguiente
+                auxiliar = listYears[recorredor5]; // Se guarda el valor actual
+                listYears[recorredor5] = listYears[recorredor5 + 1]; // Se intercambian los valores
+                listYears[recorredor5 + 1] = auxiliar; // Se intercambian los valores
+            }
+        }
+    }
 
     for (recorredor = 0; recorredor < largo; recorredor++) { // Se recorre el vector para mostrar el resumen
         anyoImpreso = false;
