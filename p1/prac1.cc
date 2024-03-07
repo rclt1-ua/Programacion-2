@@ -587,7 +587,6 @@ void summary(vector<AcademicYear>& listYears) {
         return;
     }
 
-
     for (recorredor4 = 0; recorredor4 < largo - 1; recorredor4++) { // Se recorre el vector para ordenar los cursos académicos
         for (recorredor5 = 0; recorredor5 < largo - recorredor4 - 1; recorredor5++) { // Se obtiene posiciones para ordenar
             if (listYears[recorredor5].id < listYears[recorredor5 + 1].id) { // Se compara el valor actual con el siguiente
