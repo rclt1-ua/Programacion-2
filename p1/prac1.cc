@@ -51,9 +51,9 @@ void addAcademicYear(vector<AcademicYear> &listYears);
 void deleteAcademicYear(vector<AcademicYear> &listYears);
 void addTeacher(vector<AcademicYear> &listYears);
 void deleteTeacher(vector<AcademicYear> &listYears);
-void showTeacher(vector<AcademicYear> &listYears);
+void showTeacher(const vector<AcademicYear> &listYears);
 void addPhrase(vector<AcademicYear> &listYears);
-void summary(vector<AcademicYear> &listYears);
+void summary(const vector<AcademicYear> &listYears);
 
 
 /* Función que muestra los mensajes de error
@@ -206,7 +206,7 @@ void deleteAcademicYear(vector<AcademicYear> &listYears){
             for(recorredor = 0; recorredor < largo && !eliminado; recorredor++){ // Se recorre el vector para comprobar si existe el curso académico
                 if(listYears[recorredor].id == idYInt){ // Si existe el curso académico, se elimina
                     listYears.erase(listYears.begin() + recorredor); // Se elimina el curso académico del vector
-                        eliminado = true; // Se cambia el valor de la variable "eliminado"
+                        eliminado = true; // Se cambia el valor de la variable eliminado
                 }
             }
             
@@ -369,8 +369,9 @@ void deleteTeacher(vector<AcademicYear> &listYears){
     } while(!salir && seIntrodujo); // Mientras no se haya eliminado el profesor y se haya introducido un valor
 }
 
+
 //FUNCION PARA MOSTRAR TODOS LOS DATOS DE UN PROFESOR
-void showTeacher(vector<AcademicYear> &listYears){
+void showTeacher(const vector<AcademicYear> &listYears){
     int largo = listYears.size(), // Tamaño del vector
         recorredor1, // Variable para el año del curso académico en entero y para recorrer el vector
         recorredor3; // Variable para recorrer el vector de frases
@@ -567,42 +568,70 @@ void addPhrase(vector<AcademicYear> &listYears){
     } while(!salir && seIntrodujo); // Mientras no se haya añadido la frase y se haya introducido un valor
 }
 
-//FUNCION PARA MOSTRAR UN RESUMEN DE TODAS LAS FRASES DE TODOS LOS CURSOS
-void summary(vector<AcademicYear> &listYears){
+//FUNCION PARA ORDENAR LOS CURSOS ACADEMICOS
+void Ordenar(vector<AcademicYear>& listYears) {
     int largo = listYears.size(), // Tamaño del vector
-        recorredor; // Variable para recorrer el vector
+        recorredor, recorredor2; // Variable para recorrer el vector
+    AcademicYear auxiliar;// Variable para guardar el valor durante el intercambio
+ 
+    for (recorredor = 0; recorredor < largo - 1; recorredor++) { // Se recorre el vector para ordenar los cursos académicos
+        for (recorredor2 = 0; recorredor2 < largo - recorredor - 1; recorredor2++) { // Se obtiene posiciones para ordenar
+            if (listYears[recorredor2].id < listYears[recorredor2 + 1].id) { // Se compara el valor actual con el siguiente
+                auxiliar = listYears[recorredor2]; // Se guarda el valor actual
+                listYears[recorredor2] = listYears[recorredor2 + 1]; // Se intercambian los valores
+                listYears[recorredor2 + 1] = auxiliar; // Se intercambian los valores
+            }
+        }
+    }
+}
+
+
+
+//FUNCION PARA MOSTRAR UN RESUMEN DE TODAS LAS FRASES DE TODOS LOS CURSOS
+void summary(vector<AcademicYear>& listYears) {
+    int largo = listYears.size(); // Tamaño del vector
+    int recorredor; // Variable para recorrer el vector
     size_t recorredor2, // Variable para recorrer el vector de profesores
-            recorredor4; // Variable para recorrer el vector de frases
+        recorredor3; // Variable para recorrer el vector de frases
     string asignatura; // Variable para la asignatura del profesor
     bool anyoImpreso;
 
-    if(largo == 0){ // Si el vector está vacío, se muestra un mensaje de error
+    if (largo == 0) { // Si el vector está vacío, se muestra un mensaje de error
         error(ERR_NOT_EXIST); // Se muestra un mensaje de error
         return;
     }
 
-    for(recorredor = 0; recorredor < largo; recorredor++){ // Se recorre el vector para mostrar el resumen
+
+
+
+
+
+
+
+    Ordenar(listYears);
+
+    for (recorredor = 0; recorredor < largo; recorredor++) { // Se recorre el vector para mostrar el resumen
         anyoImpreso = false;
 
-        for(recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size(); recorredor2++){ // Se recorre el vector para mostrar el resumen
-            if(listYears[recorredor].listTeachers[recorredor2].listPhrases.size() > 0){ // Si el vector de frases del profesor no está vacío, se muestra
-                
-                if(!anyoImpreso){
+        for (recorredor2 = 0; recorredor2 < listYears[recorredor].listTeachers.size(); recorredor2++) { // Se recorre el vector para mostrar el resumen
+            if (listYears[recorredor].listTeachers[recorredor2].listPhrases.size() > 0) { // Si el vector de frases del profesor no está vacío, se muestra
+
+                if (!anyoImpreso) {
                     cout << "Academic year: " << listYears[recorredor].id << endl; // Se muestra el año académico
                 }
 
-                for (recorredor4 = 0; recorredor4 < listYears[recorredor].listTeachers[recorredor2].listPhrases.size(); recorredor4++) { // Se recorre el vector para mostrar las frases del profesor
+                for (recorredor3 = 0; recorredor3 < listYears[recorredor].listTeachers[recorredor2].listPhrases.size(); recorredor3++) { // Se recorre el vector para mostrar las frases del profesor
                     cout << listYears[recorredor].listTeachers[recorredor2].name; // Se muestra el nombre del profesor
 
-                    if(listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor4].rating != 0){ // Si el rating de la frase no es 0, se muestra
-                        cout << " - " 
-                        << listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor4].rating // Se muestra el rating de la frase
-                        << " - "; 
+                    if (listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor3].rating != 0) { // Si el rating de la frase no es 0, se muestra
+                        cout << " - "
+                            << listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor3].rating // Se muestra el rating de la frase
+                            << " - ";
                     }
-                    else{ // Si el rating de la frase es 0, se muestra un espacio
+                    else { // Si el rating de la frase es 0, se muestra un espacio
                         cout << " - "; // Se muestra dos puntos y un espacio
                     }
-                    cout << listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor4].text << endl; // Se muestra el texto de la frase
+                    cout << listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor3].text << endl; // Se muestra el texto de la frase
                 }
 
                 anyoImpreso = true;
