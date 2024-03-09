@@ -54,9 +54,9 @@ void deleteTeacher(vector<AcademicYear> &listYears);
 void showTeacher(const vector<AcademicYear> &listYears);
 void addPhrase(vector<AcademicYear> &listYears);
 void summary(vector<AcademicYear> &listYears);
-void SiProfesorExiste(vector<AcademicYear> &listYears, const int idYInt);
-void Ordenar(vector<AcademicYear>& listYears);
 
+void Ordenar(vector<AcademicYear>& listYears);
+void SiProfesorExiste(vector<AcademicYear> &listYears, const int idYInt, bool &salir, bool &seIntrodujo, bool &duplicado);
 
 /* Función que muestra los mensajes de error
 e: tipo de error a mostrar
@@ -224,16 +224,11 @@ void deleteAcademicYear(vector<AcademicYear> &listYears){
 //FUNCION PARA AÑADIR UN PROFESOR
 void addTeacher(vector<AcademicYear> &listYears){
     int largo = listYears.size(), // Tamaño del vector
-        idYInt, // Variable para el año del curso académico en entero
-        recorredor, // Variable para recorrer el vector. Recorredor para el vector de años
-        puntuacionInt; // Variable para la puntuación del profesor
-    size_t recorredor2, // Variable para recorrer el vector de profesores
-        recorredor3; // Variable para recorrer el vector de asignatura y asignarla a la variable subject
+        idYInt; // Variable para el año del curso académico en entero
     bool seIntrodujo, // Variable para saber si se ha introducido un valor
-        salir, // Variable para salir del bucle
-        duplicado = false; // Variable para verificar si el profesor ya existe
-    string nombre, asignatura, apodo, idY, puntuacion; // Variables para el nombre, asignatura, apodo, año del curso académico y puntuación del profesor
-    Teacher profesor; // Variable para el profesor
+        duplicado = false, // Variable para saber si el profesor ya existe
+        salir; // Variable para salir del bucle
+    string idY;
     
     do{ // Bucle para introducir el año del curso académico
         seIntrodujo = true;
@@ -254,13 +249,10 @@ void addTeacher(vector<AcademicYear> &listYears){
         if(largo > 0 && seIntrodujo){ // Si el vector no está vacío y se ha introducido un valor
             idYInt = stoi(idY); // Se convierte el año del curso académico a entero
 
-            SiProfesorExiste(listYears, idYInt); // Se llama a la función para realizar los procesos de añadir el profesor
+            SiProfesorExiste(listYears, idYInt, salir, seIntrodujo, duplicado); // Se llama a la función para realizar los procesos de añadir el profesor
         }
     } while (!salir && seIntrodujo);  // Mientras no se haya añadido el profesor y se haya introducido un valor
 }
-
-
-
 
 
 //FUNCION PARA BORRAR UN PROFESOR
@@ -304,7 +296,6 @@ void deleteTeacher(vector<AcademicYear> &listYears){
         }
     } while(!salir && seIntrodujo); // Mientras no se haya eliminado el profesor y se haya introducido un valor
 }
-
 
 //FUNCION PARA MOSTRAR TODOS LOS DATOS DE UN PROFESOR
 void showTeacher(const vector<AcademicYear> &listYears){
@@ -509,8 +500,7 @@ void summary(vector<AcademicYear> &listYears) {
     int largo = listYears.size(); // Tamaño del vector
     int recorredor; // Variable para recorrer el vector
     size_t recorredor2, // Variable para recorrer el vector de profesores
-        recorredor3, // Variable para recorrer el vector de frases
-        organizador1, organizador2; // Variable para recorrer el vector y ordenar
+        recorredor3; // Variable para recorrer el vector de frases
     string asignatura; // Variable para la asignatura del profesor
     bool anyoImpreso;
     AcademicYear auxiliar; // Variable para guardar el valor durante el intercambio
@@ -552,47 +542,33 @@ void summary(vector<AcademicYear> &listYears) {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
 //FUNCION PARA ORDENAR LOS CURSOS ACADEMICOS
 void Ordenar(vector<AcademicYear>& listYears) {
     int largo = listYears.size(), // Tamaño del vector
-        recorredor, recorredor2; // Variable para recorrer el vector
+        organizador, organizador2; // Variable para recorrer el vector
     AcademicYear auxiliar;// Variable para guardar el valor durante el intercambio
 
-    for (recorredor = 0; recorredor < largo - 1; recorredor++) { // Se recorre el vector para ordenar los cursos académicos
-        for (recorredor2 = 0; recorredor2 < largo - recorredor - 1; recorredor2++) { // Se obtiene posiciones para ordenar
-            if (listYears[recorredor2].id < listYears[recorredor2 + 1].id) { // Se compara el valor actual con el siguiente
-                auxiliar = listYears[recorredor2]; // Se guarda el valor actual
-                listYears[recorredor2] = listYears[recorredor2 + 1]; // Se intercambian los valores
-                listYears[recorredor2 + 1] = auxiliar; // Se intercambian los valores
+    for (organizador = 0; organizador < largo - 1; organizador++) { // Se recorre el vector para ordenar los cursos académicos
+        for (organizador2 = 0; organizador2 < largo - organizador2 - 1; organizador2++) { // Se obtiene posiciones para ordenar
+            if (listYears[organizador2].id < listYears[organizador2 + 1].id) { // Se compara el valor actual con el siguiente
+                auxiliar = listYears[organizador2]; // Se guarda el valor actual
+                listYears[organizador2] = listYears[organizador2 + 1]; // Se intercambian los valores
+                listYears[organizador2 + 1] = auxiliar; // Se intercambian los valores
             }
         }
     }
 }
 
-
-
-
 //FUNCION PARA AÑADIR UN PROFESOR
-void SiProfesorExiste(vector<AcademicYear> &listYears, const int idYInt){
+void SiProfesorExiste(vector<AcademicYear> &listYears, const int idYInt, bool &salir, bool &seIntrodujo, bool &duplicado){
     int largo = listYears.size(), // Tamaño del vector
-        recorredor, // Variable para recorrer el vector. Recorredor para el vector de años
-        recorredor2, // Variable para recorrer el vector de profesores
-        recorredor3, // Variable para recorrer el vector de asignatura y asignarla a la variable subject
+        recorredor,
         puntuacionInt; // Variable para la puntuación del profesor
-    bool salir = false, // Variable para salir del bucle
-        duplicado = false; // Variable para verificar si el profesor ya existe
+    size_t recorredor2, // Variable para recorrer el vector de profesores
+        recorredor3; // Variable para recorrer el vector de asignatura y asignarla a la variable subject
     Teacher profesor; // Variable para el profesor
     string nombre, asignatura, apodo, puntuacion; // Variables para el nombre, asignatura, apodo y puntuación del profesor
+
 
     for(recorredor = 0; recorredor < largo && !salir; recorredor++){ // Se recorre el vector para comprobar si existe el curso académico
         if(listYears[recorredor].id == idYInt){ // Si existe el curso académico, se añade el profesor
