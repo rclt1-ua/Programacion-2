@@ -56,7 +56,7 @@ void addPhrase(vector<AcademicYear> &listYears);
 void summary(vector<AcademicYear> &listYears);
 
 void Ordenar(vector<AcademicYear>& listYears);
-
+void SiProfesorExiste(vector<AcademicYear> &listYears, const int idYInt, bool &salir, bool &seIntrodujo, bool &duplicado);
 
 /* Función que muestra los mensajes de error
 e: tipo de error a mostrar
@@ -220,19 +220,15 @@ void deleteAcademicYear(vector<AcademicYear> &listYears){
     while(!eliminado && seIntrodujo); // Mientras no se haya eliminado el curso académico y se haya introducido un valor
 }
 
+
 //FUNCION PARA AÑADIR UN PROFESOR
 void addTeacher(vector<AcademicYear> &listYears){
     int largo = listYears.size(), // Tamaño del vector
-        idYInt, // Variable para el año del curso académico en entero
-        recorredor, // Variable para recorrer el vector. Recorredor para el vector de años
-        puntuacionInt; // Variable para la puntuación del profesor
-    size_t recorredor2, // Variable para recorrer el vector de profesores
-        recorredor3; // Variable para recorrer el vector de asignatura y asignarla a la variable subject
+        idYInt; // Variable para el año del curso académico en entero
     bool seIntrodujo, // Variable para saber si se ha introducido un valor
-        salir, // Variable para salir del bucle
-        duplicado = false; // Variable para verificar si el profesor ya existe
-    string nombre, asignatura, apodo, idY, puntuacion; // Variables para el nombre, asignatura, apodo, año del curso académico y puntuación del profesor
-    Teacher profesor; // Variable para el profesor
+        duplicado = false, // Variable para saber si el profesor ya existe
+        salir; // Variable para salir del bucle
+    string idY;
     
     do{ // Bucle para introducir el año del curso académico
         seIntrodujo = true;
@@ -253,81 +249,11 @@ void addTeacher(vector<AcademicYear> &listYears){
         if(largo > 0 && seIntrodujo){ // Si el vector no está vacío y se ha introducido un valor
             idYInt = stoi(idY); // Se convierte el año del curso académico a entero
 
-            for(recorredor = 0; recorredor < largo && !salir; recorredor++){ // Se recorre el vector para comprobar si existe el curso académico
-                if(listYears[recorredor].id == idYInt){ // Si existe el curso académico, se añade el profesor
-                    do{ // Bucle para introducir el nombre del profesor
-                        cout << "Enter teacher name: "; // Se pide el nombre del profesor
-                            getline(cin, nombre); // Se introduce el nombre del profesor con getline para evitar problemas con el buffer de teclado
-
-                        if(nombre.empty()){ // Si el nombre del profesor está vacío, se muestra un mensaje de error
-                                error(ERR_EMPTY); // Se muestra un mensaje de error
-                                salir = true; // Se cambia el valor de la variable salir
-                            return;
-                        } 
-
-                        for (recorredor2 = 0; (recorredor2 <= listYears[recorredor].listTeachers.size() && !salir); recorredor2++) { // Se recorre el vector para comprobar si ya existe el profesor
-                            if (recorredor2 < listYears[recorredor].listTeachers.size() && 
-                                listYears[recorredor].listTeachers[recorredor2].name == nombre){ // Si ya existe el profesor, se muestra un mensaje de error
-                                error(ERR_DUPLICATED); // Se muestra un mensaje de error
-                                duplicado = true; // Se cambia el valor de la variable duplicado
-                            }
-                            
-                            if(!duplicado){ // Si no existe el profesor, se añade
-                                cout << "Enter nickname: "; // Se pide el apodo del profesor
-                                    getline(cin, apodo); // Se introduce el apodo del profesor con getline para evitar problemas con el buffer de teclado
-                                
-                                if(apodo.empty()){
-                                    apodo = ""; // Se cambia el valor de la variable apodo
-                                }
-
-                                cout << "Enter subject: "; // Se pide la asignatura del profesor                          
-                                    getline(cin, asignatura); // Se introduce la asignatura del profesor con getline para evitar problemas con el buffer de teclado
-
-                                if(asignatura.empty()){ // Si la asignatura del profesor está vacía, se muestra un mensaje de error
-                                        error(ERR_EMPTY); // Se muestra un mensaje de error
-                                        salir = true; // Se cambia el valor de la variable salir
-                                    return;
-                                }
-                                else if(asignatura.size() > 49){ // Si la asignatura del profesor es mayor a 49 caracteres, se acorta
-                                    asignatura = asignatura.substr(0, 48); // Se acorta la asignatura del profesor hasta 49 caracteres
-                                } 
-
-                                if (asignatura.size() <= 49 && !asignatura.empty()) { // Si la asignatura del profesor no está vacía y no supera los 49 caracteres
-                                    do{
-                                        cout << "Enter rating: "; // Se pide la puntuación del profesor
-                                            getline(cin, puntuacion); // Se introduce la puntuación del profesor con getline para evitar problemas con el buffer de teclado
-
-                                        puntuacionInt = stoi(puntuacion); // Se convierte la puntuación del profesor a int
-                                        
-                                        if (puntuacion.empty()) { // Si la puntuación del profesor está vacía, se muestra un mensaje de error   
-                                                puntuacionInt = 0; // Se cambia el valor de la variable puntuacionInt
-                                        }
-                                        else if(puntuacionInt < 1 || puntuacionInt > 5) { // Si la puntuación del profesor no está entre 0 y 5, se muestra un mensaje de error
-                                                error(ERR_RATING); // Se muestra un mensaje de error
-                                        }
-                                        else if(puntuacionInt >= 1 && puntuacionInt <= 5){ // Si la puntuación del profesor está entre 0 y 5, se añade el profesor
-                                                profesor.name = nombre; // Se añade el nombre del profesor al registro
-                                                profesor.nickname = apodo; // Se añade el apodo del profesor al registro
-
-                                                for (recorredor3 = 0; recorredor3 < asignatura.size() - 1; recorredor3++) { // Se añade la asignatura del profesor al registro
-                                                    profesor.subject[recorredor3] = asignatura[recorredor3];
-                                                }
-                                                profesor.subject[recorredor3] = '\0'; // Se añade el carácter nulo al final de la asignatura del profesor
-
-                                                profesor.rating = puntuacionInt; // Se añade la puntuación en int del profesor al registro
-                                            listYears[recorredor].listTeachers.push_back(profesor); // Se añade el profesor al vector
-                                                salir = true; // Se cambia el valor de la variable salir
-                                        }
-                                    } while (puntuacionInt < 0 || puntuacionInt > 5); // Mientras la puntuación del profesor no esté entre 0 y 5
-                                }                           
-                            }
-                        }
-                    } while (!salir); // Mientras no se haya añadido el profesor
-                }
-            }
+            SiProfesorExiste(listYears, idYInt, salir, seIntrodujo, duplicado); // Se llama a la función para realizar los procesos de añadir el profesor
         }
     } while (!salir && seIntrodujo);  // Mientras no se haya añadido el profesor y se haya introducido un valor
 }
+
 
 //FUNCION PARA BORRAR UN PROFESOR
 void deleteTeacher(vector<AcademicYear> &listYears){
@@ -629,6 +555,87 @@ void Ordenar(vector<AcademicYear>& listYears) {
                 listYears[organizador2] = listYears[organizador2 + 1]; // Se intercambian los valores
                 listYears[organizador2 + 1] = auxiliar; // Se intercambian los valores
             }
+        }
+    }
+}
+
+//FUNCION PARA AÑADIR UN PROFESOR
+void SiProfesorExiste(vector<AcademicYear> &listYears, const int idYInt, bool &salir, bool &seIntrodujo, bool &duplicado){
+    int largo = listYears.size(), // Tamaño del vector
+        recorredor,
+        puntuacionInt; // Variable para la puntuación del profesor
+    size_t recorredor2, // Variable para recorrer el vector de profesores
+        recorredor3; // Variable para recorrer el vector de asignatura y asignarla a la variable subject
+    Teacher profesor; // Variable para el profesor
+    string nombre, asignatura, apodo, puntuacion; // Variables para el nombre, asignatura, apodo y puntuación del profesor
+
+
+    for(recorredor = 0; recorredor < largo && !salir; recorredor++){ // Se recorre el vector para comprobar si existe el curso académico
+        if(listYears[recorredor].id == idYInt){ // Si existe el curso académico, se añade el profesor
+            do{ // Bucle para introducir el nombre del profesor
+                cout << "Enter teacher name: "; // Se pide el nombre del profesor
+                    getline(cin, nombre); // Se introduce el nombre del profesor con getline para evitar problemas con el buffer de teclado
+
+               if(nombre.empty()){ // Si el nombre del profesor está vacío, se muestra un mensaje de error
+                    error(ERR_EMPTY); // Se muestra un mensaje de error
+                        salir = true; // Se cambia el valor de la variable salir
+                    return;
+                } 
+
+                for (recorredor2 = 0; (recorredor2 <= listYears[recorredor].listTeachers.size() && !salir); recorredor2++) { // Se recorre el vector para comprobar si ya existe el profesor
+                    if (recorredor2 < listYears[recorredor].listTeachers.size() && 
+                            listYears[recorredor].listTeachers[recorredor2].name == nombre){ // Si ya existe el profesor, se muestra un mensaje de error
+                            error(ERR_DUPLICATED); // Se muestra un mensaje de error
+                            duplicado = true; // Se cambia el valor de la variable duplicado
+                    }
+                            
+                    if(!duplicado){ // Si no existe el profesor, se añade
+                        cout << "Enter nickname: "; // Se pide el apodo del profesor
+                            getline(cin, apodo); // Se introduce el apodo del profesor con getline para evitar problemas con el buffer de teclado
+
+                        cout << "Enter subject: "; // Se pide la asignatura del profesor                          
+                            getline(cin, asignatura); // Se introduce la asignatura del profesor con getline para evitar problemas con el buffer de teclado
+
+                        if(asignatura.empty()){ // Si la asignatura del profesor está vacía, se muestra un mensaje de error
+                                error(ERR_EMPTY); // Se muestra un mensaje de error
+                                salir = true; // Se cambia el valor de la variable salir
+                            return;
+                        }
+                        else if(asignatura.size() > 49){ // Si la asignatura del profesor es mayor a 49 caracteres, se acorta
+                            asignatura = asignatura.substr(0, 48); // Se acorta la asignatura del profesor hasta 49 caracteres
+                        } 
+
+                        if (asignatura.size() <= 49 && !asignatura.empty()) { // Si la asignatura del profesor no está vacía y no supera los 49 caracteres
+                            do{
+                                cout << "Enter rating: "; // Se pide la puntuación del profesor
+                                    getline(cin, puntuacion); // Se introduce la puntuación del profesor con getline para evitar problemas con el buffer de teclado
+
+                                puntuacionInt = stoi(puntuacion); // Se convierte la puntuación del profesor a int
+                                        
+                                if (puntuacion.empty()) { // Si la puntuación del profesor está vacía, se muestra un mensaje de error   
+                                    puntuacionInt = 0; // Se cambia el valor de la variable puntuacionInt
+                                }
+                                else if(puntuacionInt < 0 || puntuacionInt > 5) { // Si la puntuación del profesor no está entre 0 y 5, se muestra un mensaje de error
+                                    error(ERR_RATING); // Se muestra un mensaje de error
+                                }
+                                else if(puntuacionInt >= 0 && puntuacionInt <= 5){ // Si la puntuación del profesor está entre 0 y 5, se añade el profesor
+                                                profesor.name = nombre; // Se añade el nombre del profesor al registro
+                                                profesor.nickname = apodo; // Se añade el apodo del profesor al registro
+
+                                        for (recorredor3 = 0; recorredor3 < asignatura.size(); recorredor3++) { // Se añade la asignatura del profesor al registro
+                                            profesor.subject[recorredor3] = asignatura[recorredor3];
+                                        }
+                                        profesor.subject[recorredor3] = '\0'; // Se añade el carácter nulo al final de la asignatura del profesor
+
+                                        profesor.rating = puntuacionInt; // Se añade la puntuación en int del profesor al registro
+                                        listYears[recorredor].listTeachers.push_back(profesor); // Se añade el profesor al vector
+                                    salir = true; // Se cambia el valor de la variable salir
+                                }
+                           } while (puntuacionInt < 0 || puntuacionInt > 5); // Mientras la puntuación del profesor no esté entre 0 y 5
+                        }                           
+                    }
+                }
+            } while (!salir); // Mientras no se haya añadido el profesor
         }
     }
 }
