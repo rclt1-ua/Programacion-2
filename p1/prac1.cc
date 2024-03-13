@@ -616,6 +616,7 @@ void summary(vector<AcademicYear> &listYears) {
     }
 }
 
+
 //FUNCION PARA ORDENAR LOS CURSOS ACADEMICOS
 void Ordenar(vector<AcademicYear>& listYears) {
     int largo = listYears.size(), // Tamaño del vector
