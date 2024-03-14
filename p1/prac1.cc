@@ -131,6 +131,9 @@ int main(){
     }while(option!='q');
 }
 
+
+
+
 //FUNCION PARA AÑADIR UN CURSO ACADEMICO
 void addAcademicYear(vector<AcademicYear> &listYears){
     int largo = listYears.size(), // Tamaño del vector
@@ -177,6 +180,9 @@ void addAcademicYear(vector<AcademicYear> &listYears){
     } while(encontrado); // Mientras ya exista el curso académico
 }
 
+
+
+
 //FUNCION PARA ELIMINAR UN CURSO ACADEMICO
 void deleteAcademicYear(vector<AcademicYear> &listYears){
     int largo = listYears.size(), // Tamaño del vector
@@ -219,6 +225,9 @@ void deleteAcademicYear(vector<AcademicYear> &listYears){
     } 
     while(!eliminado && seIntrodujo); // Mientras no se haya eliminado el curso académico y se haya introducido un valor
 }
+
+
+
 
 //FUNCION PARA AÑADIR UN PROFESOR
 void addTeacher(vector<AcademicYear> &listYears){
@@ -309,7 +318,7 @@ void addTeacher(vector<AcademicYear> &listYears){
                                                 profesor.name = nombre; // Se añade el nombre del profesor al registro
                                                 profesor.nickname = apodo; // Se añade el apodo del profesor al registro
 
-                                                for (recorredor3 = 0; recorredor3 < asignatura.size() - 1; recorredor3++) { // Se añade la asignatura del profesor al registro
+                                                for (recorredor3 = 0; recorredor3 < asignatura.size(); recorredor3++) { // Se añade la asignatura del profesor al registro
                                                     profesor.subject[recorredor3] = asignatura[recorredor3];
                                                 }
                                                 profesor.subject[recorredor3] = '\0'; // Se añade el carácter nulo al final de la asignatura del profesor
@@ -328,6 +337,9 @@ void addTeacher(vector<AcademicYear> &listYears){
         }
     } while (!salir && seIntrodujo);  // Mientras no se haya añadido el profesor y se haya introducido un valor
 }
+
+
+
 
 //FUNCION PARA BORRAR UN PROFESOR
 void deleteTeacher(vector<AcademicYear> &listYears){
@@ -370,6 +382,9 @@ void deleteTeacher(vector<AcademicYear> &listYears){
         }
     } while(!salir && seIntrodujo); // Mientras no se haya eliminado el profesor y se haya introducido un valor
 }
+
+
+
 
 //FUNCION PARA MOSTRAR TODOS LOS DATOS DE UN PROFESOR
 void showTeacher(const vector<AcademicYear> &listYears){
@@ -463,6 +478,9 @@ void showTeacher(const vector<AcademicYear> &listYears){
         }
     } while(!mostrado && seIntrodujo);
 }
+
+
+
 
 //FUNCION PARA BORRAR UN PROFESOR
 void addPhrase(vector<AcademicYear> &listYears){
@@ -569,6 +587,8 @@ void addPhrase(vector<AcademicYear> &listYears){
     } while(!salir && seIntrodujo); // Mientras no se haya añadido la frase y se haya introducido un valor
 }
 
+
+
 //FUNCION PARA MOSTRAR UN RESUMEN DE TODAS LAS FRASES DE TODOS LOS CURSOS
 void summary(vector<AcademicYear> &listYears) {
     int largo = listYears.size(); // Tamaño del vector
@@ -615,6 +635,8 @@ void summary(vector<AcademicYear> &listYears) {
         }
     }
 }
+
+
 
 
 //FUNCION PARA ORDENAR LOS CURSOS ACADEMICOS
