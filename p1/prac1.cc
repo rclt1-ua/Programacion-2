@@ -630,7 +630,7 @@ void summary(vector<AcademicYear> &listYears) {
                     cout << listYears[recorredor].listTeachers[recorredor2].listPhrases[recorredor3].text << endl; // Se muestra el texto de la frase
                 }
 
-                anyoImpreso = true;
+                anyoImpreso = true; // Para no volver a imprimir el año académico
             }
         }
     }
