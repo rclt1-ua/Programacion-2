@@ -645,12 +645,12 @@ void Ordenar(vector<AcademicYear>& listYears) {
         organizador, organizador2; // Variable para recorrer el vector
     AcademicYear auxiliar;// Variable para guardar el valor durante el intercambio
 
-    for (organizador = 0; organizador < largo - 1; organizador++) { // Se recorre el vector para ordenar los cursos académicos
-        for (organizador2 = 0; organizador2 < largo - organizador2 - 1; organizador2++) { // Se obtiene posiciones para ordenar
-            if (listYears[organizador2].id < listYears[organizador2 + 1].id) { // Se compara el valor actual con el siguiente
-                auxiliar = listYears[organizador2]; // Se guarda el valor actual
-                listYears[organizador2] = listYears[organizador2 + 1]; // Se intercambian los valores
-                listYears[organizador2 + 1] = auxiliar; // Se intercambian los valores
+    for(organizador = 0; organizador < largo - 1; organizador++){ // Se recorre el vector para ordenar los cursos académicos
+        for(organizador2 = 0; organizador2 < largo - organizador - 1; organizador2++){ // Se recorre el vector para ordenar los cursos académicos
+            if(listYears[organizador2].id < listYears[organizador2 + 1].id){ // Si el año del curso académico es menor que el siguiente, se intercambian
+                auxiliar = listYears[organizador2]; // Se guarda el valor del curso académico en la variable auxiliar
+                listYears[organizador2] = listYears[organizador2 + 1]; // Se intercambia el valor del curso académico
+                listYears[organizador2 + 1] = auxiliar; // Se intercambia el valor del curso académico
             }
         }
     }
