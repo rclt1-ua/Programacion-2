@@ -57,7 +57,7 @@ void viewAnswers(Database &data);
 void viewStatistics(Database &base);
 void exportQuestions(Database &data);
 void addBinTeachers(Database &data);
-void readBinTeachers(Database &data);
+void loadTeachers(Database &data);
 void comprobarNom(Database &data, string &nombre, bool &nombreCorrecto, bool &rn);
 void validarFila(string &linea, int &tipoError, int &contador, bool &hayError);
 void convertirCon(string &contrasenya);
@@ -144,31 +144,75 @@ int main(int argc, char *argv[]) {
     int numData = 1,
         recorredor,
         recorredor2,
-        recorredor3;
+        recorredor3,
+        contarF = 0,
+        contarS = 0;
     data.nextId= numData;
     char option;
+    string fileName;
+
+    loadTeachers(data);
+
+    for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){
+        numData = data.questions[recorredor].id;
+    }
+
+
+    
+    for (recorredor3 = 1; recorredor3 < argc; recorredor3++) {
+        if (recorredor3 > 1 && strcmp(argv[recorredor3 - 1], "-f") == 0) {
+            continue; // Ignorar el nombre del archivo de preguntas
+        }
+        if (strcmp(argv[recorredor3], "-s") != 0 && strcmp(argv[recorredor3], "-f") != 0) {
+           error(ERR_ARGS); 
+           return 0;
+        }
+    }
+
 
     for (recorredor = 1; recorredor < argc; recorredor++) {
-        if (strcmp(argv[recorredor], "-f") == 0 && recorredor + 1 < argc) {
-            batchAddQuestionsComando(data, numData, argv[recorredor + 1]);
-            recorredor++;
-        }
-    }
-    
-    for (recorredor2 = 1; recorredor2 < argc; recorredor2++) {
-        if (strcmp(argv[recorredor2], "-s") == 0) {
-            viewStatistics(data);
+        if (strcmp(argv[recorredor], "-f") == 0) {
+            contarF++;
+            
+            if(contarF == 3){
+                error(ERR_ARGS);
+                return 0;
+            }
+
+            if (contarF == 1) {
+                  if (strcmp(argv[recorredor + 1], "-f") == 0 || strcmp(argv[recorredor + 1], "-s") != 0){
+                    fileName = argv[recorredor + 1];
+                    contarF++;
+                  }
+                  else if (strcmp(argv[recorredor + 1], "-s") == 0){
+                    error(ERR_ARGS);
+                    return 0;
+                  }     
+            }
         }
     }
 
-  for (recorredor3 = 1; recorredor3 < argc; recorredor3++) {
-    if (recorredor3 > 1 && strcmp(argv[recorredor3 - 1], "-f") == 0) {
-        continue; // Ignorar el nombre del archivo de preguntas
+
+
+
+    for (recorredor2 = 1; recorredor2 < argc; recorredor2++) {
+        if (strcmp(argv[recorredor2], "-s") == 0) {
+            contarS++;
+        }
+
     }
-    if (strcmp(argv[recorredor3], "-s") != 0 && strcmp(argv[recorredor3], "-f") != 0) {
-        cout << "Error" << endl;
+
+    if(contarF < 3 && contarF > 0){
+        batchAddQuestionsComando(data, numData, fileName.c_str());
     }
-}
+
+    if(contarS == 1){
+        viewStatistics(data);
+    }
+
+
+
+
 
     do{
         showMenu();
@@ -504,7 +548,7 @@ void addAnswers(Database &data){
         respuesta;
     
     do{
-        cout << "Enter teacher name: " << endl;
+        cout << "Enter teacher name: ";
         getline(cin, nombre);
 
         if(nombre.empty()){
@@ -538,7 +582,7 @@ void addAnswers(Database &data){
         do{
             correcto = false;
             
-            cout << "Enter password: " << endl;
+            cout << "Enter password: ";
             getline(cin, contrasenya);
 
             if(contrasenya.empty()){
@@ -581,11 +625,15 @@ void addAnswers(Database &data){
                     idCorrecto = false;
                     idConvertido = false;
 
-                    cout << "Enter question id" << endl;
+                    cout << "Enter question id: ";
                     getline(cin, idStr);
 
                     if(idStr.empty()){
                         error(ERR_EMPTY);
+                        return;
+                    }
+
+                    if(idStr == "b"){
                         return;
                     }
 
@@ -621,7 +669,7 @@ void addAnswers(Database &data){
                     do{
                         respuestaCorrecta = true;
 
-                        cout << "Enter answer: " << endl;
+                        cout << "Enter answer: ";
                         getline(cin, respuesta);
 
                         if(respuesta.empty()){
@@ -638,11 +686,9 @@ void addAnswers(Database &data){
 
                     if(respuestaCorrecta){
                         data.questions[idRespondido].answer = respuesta;
+                        data.teachers[posEncontrada].answered++;
                     }
                 }
-
-
-
             }
         }
     }
@@ -757,8 +803,6 @@ void exportQuestions(Database &data){
 
 
 
-
-
 void addBinTeachers(Database &data){
     ofstream file;
     int recorredor;
@@ -777,7 +821,7 @@ void addBinTeachers(Database &data){
 
 
 
-void readBinTeachers(Database &data){
+void loadTeachers(Database &data){
     ifstream file;
     Teacher teacher;
 
@@ -787,8 +831,6 @@ void readBinTeachers(Database &data){
             data.teachers.push_back(teacher);
         }
         file.close();
-    }else{
-        error(ERR_FILE);
     }
 }
 
@@ -976,6 +1018,7 @@ void batchAddQuestionsComando(Database &data, int &numData, const char *fileRef)
         errorN;
     bool hayError;
 
+        fileName = fileRef;
 
         ifstream file(fileName); // Abrimos el fichero
 
@@ -991,7 +1034,7 @@ void batchAddQuestionsComando(Database &data, int &numData, const char *fileRef)
                     errorN++;
                 }
 
-                if(hayError){ // Si hay un error, mostramos el error
+                if(hayError && tipoError != 1){ // Si hay un error, mostramos el error
                     cout << "Error line" << numLinea << endl;
                     lineaError++;
                 }
