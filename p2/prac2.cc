@@ -138,7 +138,6 @@ void showMenu() {
 }
 
 // Función principal. Tendrás que añadir más código tuyo
-// Función principal. Tendrás que añadir más código tuyo
 int main(int argc, char *argv[]) {
     Database data;
     int numData = 1,
@@ -157,8 +156,6 @@ int main(int argc, char *argv[]) {
         numData = data.questions[recorredor].id;
     }
 
-
-    
     for (recorredor3 = 1; recorredor3 < argc; recorredor3++) {
         if (recorredor3 > 1 && strcmp(argv[recorredor3 - 1], "-f") == 0) {
             continue; // Ignorar el nombre del archivo de preguntas
@@ -168,7 +165,6 @@ int main(int argc, char *argv[]) {
            return 0;
         }
     }
-
 
     for (recorredor = 1; recorredor < argc; recorredor++) {
         if (strcmp(argv[recorredor], "-f") == 0) {
@@ -192,14 +188,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
-
-
     for (recorredor2 = 1; recorredor2 < argc; recorredor2++) {
         if (strcmp(argv[recorredor2], "-s") == 0) {
             contarS++;
         }
-
     }
 
     if(contarF < 3 && contarF > 0){
@@ -209,10 +201,6 @@ int main(int argc, char *argv[]) {
     if(contarS == 1){
         viewStatistics(data);
     }
-
-
-
-
 
     do{
         showMenu();
@@ -254,7 +242,6 @@ int main(int argc, char *argv[]) {
 }
 
 
-
 void addQuestion(Database &data, int &numData){
     Question pregunta; // Pregunta a añadir
     string unitStr, // Unidad de la pregunta en formato string
@@ -262,18 +249,16 @@ void addQuestion(Database &data, int &numData){
     int numero; // Unidad de la pregunta en formato entero
     bool unitCorrecto, // Comprueba si la unidad es correcta
         preguntaCorrecta; // Comprueba si la pregunta es correcta
-    
-
 
     do{ //-----------------------------------------------------------------------------
         unitCorrecto = false; // Inicializamos la variable a false
 
-        cout << "Enter unit:";
+        cout << "Enter unit:"; // Pedimos la unidad
         getline(cin, unitStr);
 
         if (unitStr.empty()) { // Comprobamos si la unidad está vacía
             error(ERR_EMPTY);
-            return;
+            return; // Si está vacía, mostramos un error
         }
 
         try { // Convertimos la unidad a entero
@@ -296,7 +281,7 @@ void addQuestion(Database &data, int &numData){
         do{ // Pedimos la pregunta hasta que sea correcta
             preguntaCorrecta = false;
 
-            cout << "Enter question:";
+            cout << "Enter question:"; // Pedimos la pregunta
             getline(cin, preguntaStr);
             
             if(preguntaStr.empty()){ // Comprobamos si la pregunta está vacía
@@ -327,22 +312,24 @@ void addQuestion(Database &data, int &numData){
 }
 
 
-
 void batchAddQuestions (Database &data, int &numData){
     string fileName, // Nombre del fichero
         linea; // Línea del fichero
     int numLinea = 0, // Número de línea
         tipoError = 0, // Tipo de error
-        contador,
-        lineaError = 0,
-        preguntasAñadidas = 1,
-        errorN;
-    bool equivocado,
-        hayError;
+        contador, // Contador de '|'
+        lineaError = 0, // Línea con error
+        preguntasAñadidas = 1, // Lineas sin error
+        errorN; // Número de errores
+    bool equivocado, // Comprueba si el fichero está vacío
+        hayError; // Comprueba si hay un error
+    Question pregunta; 
+    size_t pos1, pos2;
+
     do{
         equivocado = false;
 
-        cout << "Enter filename: ";
+        cout << "Enter filename: "; // Pedimos el nombre del fichero
         getline(cin, fileName);
 
         if(fileName.empty()){ // Comprobamos si el nombre del fichero está vacío
@@ -360,72 +347,52 @@ void batchAddQuestions (Database &data, int &numData){
                 
                 validarFila(linea, tipoError, contador, hayError); // Validamos la línea
 
-                if(tipoError == 1){
-                    errorN++;
-                }
-
                 if(hayError && tipoError != 1){ // Si hay un error, mostramos el error
-                    cout << "Error line " << numLinea << endl;
-                    lineaError++;
+                    cout << "Error line " << numLinea << endl;// Mostramos el error
+                    lineaError++; // Aumentamos el número de líneas con error
                 }
+
                 if(!hayError){ // Si no hay errores, añadimos la pregunta a la base de datos
-                    if(contador == 2){
-                        Question pregunta;
-                        size_t pos1, pos2;
+                    if(contador == 2){ // Si hay dos '|'
 
-                        pos1 = linea.find('|');
-                        pos2 = linea.find('|', pos1 + 1);
+                        pos1 = linea.find('|'); // Buscamos la primera posición del carácter '|'
+                        pos2 = linea.find('|', pos1 + 1); // Buscamos la segunda posición del carácter '|'
+        
+                        pregunta.unit = stoi(linea.substr(0, pos1)); // Convertimos la unidad a entero
+                        pregunta.question = linea.substr(pos1 + 1, pos2 - pos1 - 1); // Asignamos la pregunta
+                        pregunta.answer = linea.substr(pos2 + 1); // Asignamos la respuesta
+                        pregunta.id = data.nextId; // Asignamos el id a la pregunta
 
-                        pregunta.unit = stoi(linea.substr(0, pos1));
-                        pregunta.question = linea.substr(pos1 + 1, pos2 - pos1 - 1);
-                        pregunta.answer = linea.substr(pos2 + 1);
-                        pregunta.id = preguntasAñadidas;
-
-                        data.questions.push_back(pregunta);
-                        preguntasAñadidas++;
+                        data.questions.push_back(pregunta); // Añadimos la pregunta a la base de datos
+                        data.nextId++; // Aumentamos el id para la siguiente pregunta
+                        preguntasAñadidas++; // Aumentamos el número de preguntas añadidas
                     }
                     else if(contador == 1){
-                        Question pregunta;
-                        size_t pos1;
 
-                        pos1 = linea.find('|');
+                        pos1 = linea.find('|'); // Buscamos la primera posición del carácter '|'
 
-                        pregunta.unit = stoi(linea.substr(0, pos1));
-                        pregunta.question = linea.substr(pos1 + 1);
-                        pregunta.id = preguntasAñadidas;
+                        pregunta.unit = stoi(linea.substr(0, pos1)); // Convertimos la unidad a entero
+                        pregunta.question = linea.substr(pos1 + 1); // Asignamos la pregunta
+                        pregunta.id = data.nextId; // Asignamos el id a la pregunta
 
-                        data.questions.push_back(pregunta);
-                        preguntasAñadidas++;
-
+                        data.questions.push_back(pregunta); // Añadimos la pregunta a la base de datos
+                        data.nextId++; // Aumentamos el id para la siguiente pregunta
+                        preguntasAñadidas++; // Aumentamos el número de preguntas añadidas
                     }
                 }
             }
 
             summary(numLinea, lineaError, preguntasAñadidas, numData, errorN); // Mostramos el resumen de las preguntas añadidas
 
-
             file.close(); // Cerramos el fichero
         }
         else{
             error(ERR_FILE); // Mostramos el error ERR_FILE
-            equivocado = true;
+            equivocado = true; // Si no se ha podido abrir el fichero, volvemos a pedir el nombre del fichero
         }
     }
-    while(equivocado);
+    while(equivocado); // Si no se ha podido abrir el fichero, volvemos a pedir el nombre del fichero
 }
-
-
-
-void summary(int numLinea, int lineaError, int preguntasAñadidas, int &numData, int &errorN){
-    if(numLinea == 0){ // Comprobamos si el fichero está vacío
-        cout << "Summary: 0/0 questions added" << endl;
-    }
-    else{
-        cout << "Summary: " << numLinea - lineaError - errorN << "/" << numLinea - errorN << " questions added" << endl;
-        numData = preguntasAñadidas;
-    }
-}
-
 
 
 void deleteQuestion(Database &base){
@@ -436,38 +403,36 @@ void deleteQuestion(Database &base){
 
     do{
         equivocado = false;
-        cout << "Enter question id: ";
-        getline(cin, id);
 
-        if(id.empty()){
+        cout << "Enter question id: "; // Pedimos el id de la pregunta a eliminar
+        getline(cin, id); // Leemos el id de la pregunta a eliminar
+
+        if(id.empty()){ // Comprobamos si el id está vacío
             error(ERR_EMPTY);   
             return;
         }
 
         try{
-            idInt = stoi(id);
+            idInt = stoi(id); // Convertimos el id a entero
         }
-        catch(const std::invalid_argument&){
+        catch(const std::invalid_argument&){ // Si no se puede convertir a entero, mostramos un error
             error(ERR_ID);
             equivocado = true;
         }
 
-        if(!equivocado){
-            for(recorredor = 0; recorredor < (int)base.questions.size(); recorredor++){
+        if(!equivocado){ // Si se ha podido convertir a entero, buscamos la pregunta con ese id
+            for(recorredor = 0; recorredor < (int)base.questions.size(); recorredor++){ // Recorremos las preguntas
                 if((int)base.questions[recorredor].id == idInt){
-                    base.questions.erase(base.questions.begin() + recorredor);
+                    base.questions.erase(base.questions.begin() + recorredor); // Eliminamos la pregunta
                     return;
                 }
             }
             error(ERR_ID);
-            equivocado = true;
+            equivocado = true; // Si no se ha encontrado la pregunta, mostramos un error
         }
-
     }
-    while(equivocado);
-
+    while(equivocado); // Si no se ha encontrado la pregunta, volvemos a pedir el id
 }
-
 
 
 void addTeacher(Database &data){
@@ -478,57 +443,56 @@ void addTeacher(Database &data){
         errorContra;
     bool nombreCorrecto,
         passwordCorrecto,
-        rn = false;
+        returnBool = false;
 
-    comprobarNom(data, nombre, nombreCorrecto, rn);
+    comprobarNom(data, nombre, nombreCorrecto, returnBool); // Comprobamos el nombre del profesor
 
-    if(rn){
+    if(returnBool){ // Si el nombre está vacío, salimos de la función
         return;
     }
 
-    if(nombreCorrecto){
+    if(nombreCorrecto){ // Si el nombre es correcto, comprobamos la contraseña
         do{
-            passwordCorrecto = false;
+            passwordCorrecto = false; 
             errorContra = 0;
 
-            cout << "Enter password:";
+            cout << "Enter password:"; // Pedimos la contraseña
             getline(cin, contrasenya);
 
-            if (contrasenya.empty()) {
+            if (contrasenya.empty()) { // Comprobamos si la contraseña está vacía
                 error(ERR_EMPTY);
                 return;
             }
 
-            for(recorredor = 0; recorredor < (int)contrasenya.size() && errorContra == 0; recorredor++){
-                if(isdigit(contrasenya[recorredor])){
+            for(recorredor = 0; recorredor < (int)contrasenya.size() && errorContra == 0; recorredor++){ // Comprobamos si la contraseña contiene caracteres válidos
+                if(isdigit(contrasenya[recorredor])){ // Comprobamos si la contraseña contiene solo dígitos
                     passwordCorrecto = true;
                 }
-                else{
+                else{ // Si la contraseña no contiene solo dígitos, mostramos un error
                     error(ERR_PASSWORD);
                     errorContra++;
                 }
             }
 
-            if(passwordCorrecto){
-                if(contrasenya.size() != 4){
+            if(passwordCorrecto){ // Si la contraseña contiene dígitos, comprobamos si tiene 4 dígitos
+                if(contrasenya.size() != 4){ 
                     error(ERR_PASSWORD);
-                    passwordCorrecto = false;
+                    passwordCorrecto = false; // Si la contraseña no tiene 4 dígitos, mostramos un error
                 }
             }
 
-        } while (!passwordCorrecto);
+        } while (!passwordCorrecto); // Si la contraseña no es correcta, volvemos a pedirla
 
         if(passwordCorrecto){
-            convertirCon(contrasenya);
+            convertirCon(contrasenya); // Convertimos la contraseña
 
-            strcpy(profesor.name, nombre.c_str());
-            strcpy(profesor.password, contrasenya.c_str());
-            profesor.answered = 0;
-            data.teachers.push_back(profesor);
+            strcpy(profesor.name, nombre.c_str()); // Asignamos el nombre del profesor
+            strcpy(profesor.password, contrasenya.c_str()); // Asignamos la contraseña del profesor
+            profesor.answered = 0; // Inicializamos el número de respuestas a 0
+            data.teachers.push_back(profesor); // Añadimos el profesor a la base de datos
         }
     }
 }
-
 
 
 void addAnswers(Database &data){
@@ -803,6 +767,19 @@ void exportQuestions(Database &data){
 
 
 
+
+void summary(int numLinea, int lineaError, int preguntasAñadidas, int &numData, int &errorN){
+    if(numLinea == 0){ // Comprobamos si el fichero está vacío
+        cout << "Summary: 0/0 questions added" << endl;
+    }
+    else{
+        cout << "Summary: " << numLinea - lineaError - errorN << "/" << numLinea - errorN << " questions added" << endl;
+        numData = preguntasAñadidas;
+    }
+}
+
+
+
 void addBinTeachers(Database &data){
     ofstream file;
     int recorredor;
@@ -905,15 +882,14 @@ void validarFila(string &linea, int &tipoError, int &contador, bool &hayError){
         return;
     }
 
-
     for(char c : linea) { // Recorremos la línea
         if(c == '|') { // si encontramos el carácter '|'
             contador++; // Aumentamos el contador
         }
     }
 
-    if (linea.back() == '|') {
-        tipoError = 4;
+    if (!isdigit(linea[0])) {
+        tipoError = 1;
         hayError = true;
         return;
     }
