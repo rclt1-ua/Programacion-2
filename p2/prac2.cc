@@ -48,6 +48,7 @@ enum Error {
 };
 
 
+// Declaración de modulos
 void addQuestion(Database &data, int &numData);
 void batchAddQuestions(Database &data, int &numData);
 void deleteQuestion(Database &base);
@@ -66,19 +67,13 @@ void summary(int numLinea, int lineaError, int preguntasAñadidas, int &numData,
 void error(Error e);
 void showMenu();
 
+void pruebaS(Database data){
+    int recorredor;
 
-
-
-
-
-
-
-
-
-
-
-
-
+    for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){
+        cout << data.questions[recorredor].id << ". (" << data.questions[recorredor].unit << ") " << data.questions[recorredor].question << endl;
+    }
+}
 
 /* Función que muestra los mensajes de error
 e: tipo de error a mostrar
@@ -224,7 +219,7 @@ int main(int argc, char *argv[]) {
                 addAnswers(data);
                 break;
             case '6': // Llamar a la función "viewAnswers" para mostrar las preguntas con sus respuestas
-                viewAnswers(data);
+                pruebaS(data); // Replace this line with the fixed code below
                 break;
             case '7': // Llamar a la función "viewStatistics" para ver las estadísticas de las preguntas
                 viewStatistics(data);
@@ -299,14 +294,11 @@ void addQuestion(Database &data, int &numData){
         while(!preguntaCorrecta); // Si la pregunta no es correcta, volvemos a pedirla
 
         if(preguntaCorrecta){
-            data.nextId = numData; // Asignamos el id a la base de datos
-
             pregunta.id = data.nextId; // Asignamos el id a la pregunta
             pregunta.unit = numero; // Asignamos la unidad a la pregunta
             pregunta.question = preguntaStr; // Asignamos la pregunta a la pregunta
             data.questions.push_back(pregunta); // Añadimos la pregunta a la base de datos
-            numData++; // Aumentamos el id para la siguiente pregunta
-
+            data.nextId++; // Aumentamos el id para la siguiente pregunta
         }
     }
 }
@@ -346,6 +338,10 @@ void batchAddQuestions (Database &data, int &numData){
                 numLinea++; // Aumentamos el número de línea
                 
                 validarFila(linea, tipoError, contador, hayError); // Validamos la línea
+
+                if(tipoError == 1){
+                    numLinea--; // Si hay un error, disminuimos el número de línea
+                }
 
                 if(hayError && tipoError != 1){ // Si hay un error, mostramos el error
                     cout << "Error line " << numLinea << endl;// Mostramos el error
@@ -512,160 +508,152 @@ void addAnswers(Database &data){
         respuesta;
     
     do{
-        cout << "Enter teacher name: ";
+        encontrado = false; // Inicializamos la variable a false
+
+        cout << "Enter teacher name: "; // Pedimos el nombre del profesor
         getline(cin, nombre);
 
-        if(nombre.empty()){
+        if(nombre.empty()){ // Comprobamos si el nombre está vacío
             error(ERR_EMPTY);
             return;
         }
 
-        encontrado = false;
-
-        if(!nombre.empty()){
-            if(data.teachers.size() != 0){
-                encontrado = false;
-
-                for(recorredor = 0; recorredor < (int)data.teachers.size() && !encontrado; recorredor++){
-                    if(nombre == data.teachers[recorredor].name){
-                        encontrado = true;
-                        posEncontrada = recorredor;
+        if(!nombre.empty()){ // Si el nombre no está vacío, comprobamos si el profesor existe
+            if(data.teachers.size() != 0){ // Comprobamos si hay profesores en la base de datos
+                for(recorredor = 0; recorredor < (int)data.teachers.size() && !encontrado; recorredor++){ // Recorremos los profesores
+                    if(nombre == data.teachers[recorredor].name){ // Comprobamos si el nombre del profesor es correcto
+                        encontrado = true; // Si el nombre del profesor es correcto, asignamos la posición del profesor 
+                        posEncontrada = recorredor; // Asignamos la posición del profesor
                     }
                 }
             }
         }
 
-        if(!encontrado){
-            error(ERR_NAME);
+        if(!encontrado){ // Si el profesor no existe, mostramos un error
+            error(ERR_NAME); 
         }
     }
-    while(!encontrado);
+    while(!encontrado); // Si el profesor no existe, volvemos a pedir el nombre del profesor
 
-    if(encontrado){
-
-        do{
+    if(encontrado){ // Si el profesor existe, comprobamos la contraseña
+        do{ 
             correcto = false;
             
-            cout << "Enter password: ";
+            cout << "Enter password: "; // Pedimos la contraseña
             getline(cin, contrasenya);
 
-            if(contrasenya.empty()){
+            if(contrasenya.empty()){ // Comprobamos si la contraseña está vacía
                 error(ERR_EMPTY);
-                return;
+                return; // Si la contraseña está vacía, mostramos un error y salimos de la función
             }
 
-            convertirCon(contrasenya);
-
-            if(contrasenya != data.teachers[posEncontrada].password){
-                error(ERR_PASSWORD);
-            }
+            convertirCon(contrasenya); // Convertimos la contraseña
 
             if(contrasenya == data.teachers[posEncontrada].password){
-                correcto = true;
+                correcto = true; // Si la contraseña es correcta, asignamos la variable a true
+            }
+            else{
+                error(ERR_PASSWORD); // Si la contraseña no es correcta, mostramos un error
             }
         }
-        while(!correcto);
+        while(!correcto); // Si la contraseña no es correcta, volvemos a pedirla
     }
 
 
     do{
-        if(correcto){
+        if(correcto){ // Si la contraseña es correcta, mostramos las preguntas sin responder
             noContestadas = 0;
 
-            for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){
+            for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){ // Recorremos las preguntas
                 if(data.questions[recorredor].answer.empty()){
                     cout << data.questions[recorredor].id << ". (" << data.questions[recorredor].unit << ") " << data.questions[recorredor].question << endl;
-                    noContestadas++;
+                    noContestadas++; // Aumentamos el número de preguntas sin responder
                 }
             }
 
-            if(noContestadas == 0){
+            if(noContestadas == 0){ // Comprobamos si no hay preguntas sin responder
                 error(ERR_NO_QUESTIONS);
-                return;
+                return; // Si no hay preguntas sin responder, mostramos un error y salimos de la función
             }
 
-            if(noContestadas > 0){
+            if(noContestadas > 0){ // Si hay preguntas sin responder, pedimos el id de la pregunta a responder
                 do{
                     idCorrecto = false;
                     idConvertido = false;
 
-                    cout << "Enter question id: ";
+                    cout << "Enter question id: "; // Pedimos el id de la pregunta a responder
                     getline(cin, idStr);
 
-                    if(idStr.empty()){
+                    if(idStr.empty()){ // Comprobamos si el id está vacío
                         error(ERR_EMPTY);
                         return;
                     }
 
-                    if(idStr == "b"){
+                    if(idStr == "b"){ // Comprobamos si el id es 'b'
                         return;
                     }
 
-                    if(idStr != "b"){
-                        try{
+                    if(idStr != "b"){ // Si el id no es 'b', comprobamos si es correcto
+                        try{ // Convertimos el id a entero
                             id = stoi(idStr);
                             idConvertido = true;
                         }
-                        catch(const std::invalid_argument&){
+                        catch(const std::invalid_argument&){ // Si no se puede convertir a entero, mostramos un error
                             error(ERR_ID);
                         }
                     }
 
-                    if(idConvertido){
-                    for(recorredor = 0; recorredor < (int)data.questions.size() && !idCorrecto; recorredor++){
-                            if(data.questions[recorredor].answer.empty() && (int)data.questions[recorredor].id == id){
-                                idCorrecto = true;
-                                idRespondido = recorredor;
-                            }
+                    if(idConvertido){ // Si se ha podido convertir a entero, comprobamos si el id es correcto
+                        for(recorredor = 0; recorredor < (int)data.questions.size() && !idCorrecto; recorredor++){ // Recorremos las preguntas
+                                if(data.questions[recorredor].answer.empty() && (int)data.questions[recorredor].id == id){ // Comprobamos si la pregunta no tiene respuesta y si el id es correcto
+                                    idCorrecto = true; // Si el id es correcto, asignamos la variable a true
+                                    idRespondido = recorredor; // Asignamos la posición de la pregunta
+                                }
                         }
 
                         if(!idCorrecto){
-                            error(ERR_ID);
+                                error(ERR_ID); // Si el id no es correcto, mostramos un error   
                         }
-
                     }
-                    
                 } 
-                while(!idCorrecto);
+                while(!idCorrecto); // Si el id no es correcto, volvemos a pedir el id
 
-
-                if(idCorrecto){
+                if(idCorrecto){ // Si el id es correcto, pedimos la respuesta
                     do{
-                        respuestaCorrecta = true;
+                        respuestaCorrecta = true; 
 
-                        cout << "Enter answer: ";
+                        cout << "Enter answer: "; // Pedimos la respuesta
                         getline(cin, respuesta);
 
-                        if(respuesta.empty()){
+                        if(respuesta.empty()){ // Comprobamos si la respuesta está vacía
                             error(ERR_EMPTY);
                             return;
                         }
 
-                        if (respuesta.find('|') != string::npos) {
+                        if (respuesta.find('|') != string::npos) { // Comprobamos si la respuesta contiene el carácter '|'
                             error(ERR_CHAR);
                             respuestaCorrecta = false;
                         }
                     }
-                    while(!respuestaCorrecta);
+                    while(!respuestaCorrecta); // Si la respuesta no es correcta, volvemos a pedirla
 
-                    if(respuestaCorrecta){
-                        data.questions[idRespondido].answer = respuesta;
+                    if(respuestaCorrecta){ // Si la respuesta es correcta, asignamos la respuesta a la pregunta
+                        data.questions[idRespondido].answer = respuesta; 
                         data.teachers[posEncontrada].answered++;
                     }
                 }
             }
         }
     }
-    while(idStr != "b");
+    while(idStr != "b"); // Si el id es 'b', salimos de la función. Mientras no sea 'b', seguimos pidiendo el id y mostrando las preguntas sin responder
 }
-
 
 
 void viewAnswers(Database &data){
     int recorredor;
 
-    for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){
-        if(!data.questions[recorredor].answer.empty()){
+    for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){ // Recorremos las preguntas
+        if(!data.questions[recorredor].answer.empty()){ // Comprobamos si la pregunta tiene respuesta
             cout << data.questions[recorredor].id << ". (" 
             << data.questions[recorredor].unit << ") " 
             << data.questions[recorredor].question << ": "
@@ -675,54 +663,46 @@ void viewAnswers(Database &data){
 }
 
 
-
 void viewStatistics(Database &base){
     int recorredor,\
         contadorPreguntas = 0,
         contadorRespuestas = 0;
 
-    if(base.questions.size() != 0){
-        for(recorredor = 0; recorredor < (int)base.questions.size(); recorredor++){
-            contadorPreguntas++;
+    if(base.questions.size() != 0){ // Comprobamos si hay preguntas en la base de datos
+        for(recorredor = 0; recorredor < (int)base.questions.size(); recorredor++){ // Recorremos las preguntas
+            contadorPreguntas++; // Aumentamos el número de preguntas
 
-            if(!base.questions[recorredor].answer.empty()){
-                contadorRespuestas++;
+            if(!base.questions[recorredor].answer.empty()){ // Comprobamos si la pregunta tiene respuesta
+                contadorRespuestas++; // Aumentamos el número de respuestas
             }
         }
     }
     else{
-        cout << "Total number of questions: 0" << endl;
-        cout << "Number of questions answered: 0" << endl;  
+        cout << "Total number of questions: 0" << endl;// Si no hay preguntas, el número de preguntas es 0
+        cout << "Number of questions answered: 0" << endl;  // Si no hay preguntas, el número de respuestas es 0
 
-        for(recorredor = 0; recorredor < (int)base.teachers.size(); recorredor++){
-            cout << base.teachers[recorredor].name << ": " << base.teachers[recorredor].answered << endl;
+        for(recorredor = 0; recorredor < (int)base.teachers.size(); recorredor++){ // Recorremos los profesores
+            cout << base.teachers[recorredor].name << ": " << base.teachers[recorredor].answered << endl; // Mostramos el nombre del profesor y el número de respuestas
         }
-
-
     }
 
-    if(contadorRespuestas != 0 && contadorPreguntas != 0){
-        cout << "Total number of questions: " << contadorPreguntas << endl;
-        cout << "Number of questions answered: " << contadorRespuestas << endl;
+    if(contadorRespuestas != 0 && contadorPreguntas != 0){ // Comprobamos si hay preguntas y respuestas
+        cout << "Total number of questions: " << contadorPreguntas << endl; // Mostramos el número de preguntas
+        cout << "Number of questions answered: " << contadorRespuestas << endl; // Mostramos el número de respuestas
 
-        for(recorredor = 0; recorredor < (int)base.teachers.size(); recorredor++){
-            cout << base.teachers[recorredor].name << ": " << base.teachers[recorredor].answered << endl;
+        for(recorredor = 0; recorredor < (int)base.teachers.size(); recorredor++){ // Recorremos los profesores
+            cout << base.teachers[recorredor].name << ": " << base.teachers[recorredor].answered << endl; // Mostramos el nombre del profesor y el número de respuestas
         }
-
-
-
     }
-    else if(contadorRespuestas == 0 && contadorPreguntas != 0){
-        cout << "Total number of questions: " << contadorPreguntas << endl;
-        cout << "Number of questions answered: 0" << endl;
+    else if(contadorRespuestas == 0 && contadorPreguntas != 0){ // Comprobamos si hay preguntas y no hay respuestas
+        cout << "Total number of questions: " << contadorPreguntas << endl; // Mostramos el número de preguntas
+        cout << "Number of questions answered: 0" << endl; // Si no hay respuestas, el número de respuestas es 0
 
-        for(recorredor = 0; recorredor < (int)base.teachers.size(); recorredor++){
-            cout << base.teachers[recorredor].name << ": " << base.teachers[recorredor].answered << endl;
+        for(recorredor = 0; recorredor < (int)base.teachers.size(); recorredor++){ // Recorremos los profesores
+            cout << base.teachers[recorredor].name << ": " << base.teachers[recorredor].answered << endl; // Mostramos el nombre del profesor y el número de respuestas
         }
-
     }
 }
-
 
 
 void exportQuestions(Database &data){
@@ -733,42 +713,39 @@ void exportQuestions(Database &data){
     do{
         noAbierto = false;
 
-        cout << "Enter filename: ";
+        cout << "Enter filename: "; // Pedimos el nombre del fichero
         getline(cin, filename);
     
-        if(filename.empty()){
+        if(filename.empty()){ // Comprobamos si el nombre del fichero está vacío
             error(ERR_EMPTY);
             return;
         }
 
-        ofstream file(filename);
+        ofstream file(filename); // Abrimos el fichero
 
-        if(file){
-            for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){
-                if(data.questions[recorredor].answer.empty()){
-                    file << data.questions[recorredor].unit << "|" << data.questions[recorredor].question << endl;
+        if(file){ // Comprobamos si se ha podido abrir el fichero
+            for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){ // Recorremos las preguntas
+                if(data.questions[recorredor].answer.empty()){ // Comprobamos si la pregunta no tiene respuesta
+                    file << data.questions[recorredor].unit << "|" << data.questions[recorredor].question << endl; // Si la pregunta no tiene respuesta, guardamos la pregunta
                 }
-                else{
-                    file << data.questions[recorredor].unit << "|" << data.questions[recorredor].question << "|" << data.questions[recorredor].answer << endl;
+                else{ // Si la pregunta tiene respuesta, guardamos la pregunta y la respuesta
+                    file << data.questions[recorredor].unit << "|" << data.questions[recorredor].question << "|" << data.questions[recorredor].answer << endl; // Guardamos la pregunta y la respuesta
                 }
             }
-            file.close();
+            file.close(); // Cerramos el fichero
         }
-        else{
+        else{ // Si no se ha podido abrir el fichero, mostramos un error
             error(ERR_FILE);
             noAbierto = true;
         }
     }
-    while(noAbierto);
-
+    while(noAbierto);// Si no se ha podido abrir el fichero, volvemos a pedir el nombre del fichero
 }
 
 
+// Funciones auxiliares
 
-
-
-
-void summary(int numLinea, int lineaError, int preguntasAñadidas, int &numData, int &errorN){
+void summary(int numLinea, int lineaError, int preguntasAñadidas, int &numData, int &errorN){ // Función que muestra el resumen de las preguntas añadidas, sirve en el modulo batchAddQuestions
     if(numLinea == 0){ // Comprobamos si el fichero está vacío
         cout << "Summary: 0/0 questions added" << endl;
     }
@@ -776,100 +753,98 @@ void summary(int numLinea, int lineaError, int preguntasAñadidas, int &numData,
         cout << "Summary: " << numLinea - lineaError - errorN << "/" << numLinea - errorN << " questions added" << endl;
         numData = preguntasAñadidas;
     }
-}
+} 
 
 
-
-void addBinTeachers(Database &data){
+void addBinTeachers(Database &data){ // Función que añade los profesores a un fichero binario
     ofstream file;
     int recorredor;
 
-    
-    file.open("teachers.bin", ios::binary);
-    if(file.is_open()){
-        for(recorredor = 0; recorredor < (int)data.teachers.size(); recorredor++){
-            file.write((char*)&data.teachers[recorredor], sizeof(Teacher));
+    file.open("teachers.bin", ios::binary); // Abrimos el fichero
+    if(file.is_open()){ // Comprobamos si se ha podido abrir el fichero
+        for(recorredor = 0; recorredor < (int)data.teachers.size(); recorredor++){ // Recorremos los profesores
+            file.write((char*)&data.teachers[recorredor], sizeof(Teacher));// Guardamos los profesores en el fichero
         }
-        file.close();
+        file.close(); // Cerramos el fichero
     }else{
-        error(ERR_FILE);
+        error(ERR_FILE); // Si no se ha podido abrir el fichero, mostramos un error
     }
 }
 
 
-
-void loadTeachers(Database &data){
+void loadTeachers(Database &data){ // Función que carga los profesores de un fichero binario
     ifstream file;
     Teacher teacher;
 
-    file.open("teachers.bin", ios::binary);
-    if(file.is_open()){
-        while(file.read((char*)&teacher, sizeof(Teacher))){
-            data.teachers.push_back(teacher);
+    file.open("teachers.bin", ios::binary); // Abrimos el fichero
+    if(file.is_open()){ // Comprobamos si se ha podido abrir el fichero
+        while(file.read((char*)&teacher, sizeof(Teacher))){ // Leemos los profesores del fichero
+            data.teachers.push_back(teacher); // Añadimos los profesores a la base de datos
         }
-        file.close();
+        file.close();// Cerramos el fichero
+    }
+    else{
+        error(ERR_FILE); // Si no se ha podido abrir el fichero, mostramos un error
     }
 }
 
 
-
-void comprobarNom(Database &data, string &nombre, bool &nombreCorrecto, bool &rn){
+void comprobarNom(Database &data, string &nombre, bool &nombreCorrecto, bool &rn){ // Función que comprueba el nombre del profesor. Se utiliza en la función addTeacher
     int recorredor,
         errorCarac;
 
-    do{
+    do{ // Pedimos el nombre del profesor hasta que sea correcto
         nombreCorrecto = false;
         rn = false;
+        errorCarac = 0;
 
-        cout << "Enter teacher name:";
+        cout << "Enter teacher name:"; // Pedimos el nombre del profesor
         getline(cin, nombre);
         
-        if(nombre.empty()){
+        if(nombre.empty()){ // Comprobamos si el nombre está vacío
             error(ERR_EMPTY);
-            rn = true;
+            rn = true; //
             return;
         }
 
-        errorCarac = 0;
-        for(recorredor = 0; recorredor < (int)nombre.size() && errorCarac == 0; recorredor++){
-            if(isalpha(nombre[recorredor]) || nombre[recorredor] == ' '){
-                nombreCorrecto = true;
+        for(recorredor = 0; recorredor < (int)nombre.size() && errorCarac == 0; recorredor++){ // Comprobamos si el nombre contiene caracteres válidos
+            if(isalpha(nombre[recorredor]) || nombre[recorredor] == ' '){ // Comprobamos si el nombre contiene solo letras y espacios
+                nombreCorrecto = true; // Si el nombre contiene solo letras y espacios, asignamos la variable a true
             }
             else{
                 error(ERR_NAME);
-                nombreCorrecto = false;
-                errorCarac++;
+                nombreCorrecto = false; // Si el nombre contiene caracteres no válidos, mostramos un error
+                errorCarac++; 
             }
         }
 
         if(nombreCorrecto){
-            while(nombre[0] == ' '){
+            while(nombre[0] == ' '){// Comprobamos si el nombre contiene espacios al principio
                 nombre.erase(0, 1);
-            }
+            } 
 
-            while(nombre[nombre.size() - 1] == ' '){
+            while(nombre[nombre.size() - 1] == ' '){ // Comprobamos si el nombre contiene espacios al final
                 nombre.erase(nombre.size() - 1, 1);
-            }
+            } 
 
-            if(nombre.size() < 3 || nombre.size() > KMAXNAME - 1){
+            if(nombre.size() < 3 || nombre.size() > KMAXNAME - 1){ // Comprobamos si el nombre tiene entre 3 y 19 caracteres
                 error(ERR_NAME);
                 nombreCorrecto = false;
-            }
+            } 
             
-            for(recorredor = 0; recorredor < (int)data.teachers.size(); recorredor++){
-                if(string(data.teachers[recorredor].name) == nombre){
-                    error(ERR_DUPLICATED);
+            for(recorredor = 0; recorredor < (int)data.teachers.size(); recorredor++){ // Comprobamos si el nombre del profesor ya existe
+                if(string(data.teachers[recorredor].name) == nombre){ // Comprobamos si el nombre del profesor ya existe
+                    error(ERR_DUPLICATED); // Si el nombre del profesor ya existe, mostramos un error
                     nombreCorrecto = false;
                 }
             }
         }
     } 
-    while (!nombreCorrecto);
+    while (!nombreCorrecto); // Si el nombre no es correcto, volvemos a pedir el nombre del profesor
 }
 
 
-
-void validarFila(string &linea, int &tipoError, int &contador, bool &hayError){
+void validarFila(string &linea, int &tipoError, int &contador, bool &hayError){ // Función que valida la línea. Se utiliza en la función batchAddQuestions y la auxiliar batchAddQuestionsComando
     size_t pos1, pos2;
 
     contador = 0;
@@ -888,60 +863,58 @@ void validarFila(string &linea, int &tipoError, int &contador, bool &hayError){
         }
     }
 
-    if (!isdigit(linea[0])) {
+    if (!isdigit(linea[0])) { // Comprobamos si la unidad es un número
         tipoError = 1;
         hayError = true;
         return;
     }
 
 
-    if(contador < 1){
+    if(contador < 1){ // Comprobamos si hay menos de un '|'
         tipoError = 4;
         hayError = true;
         return;
     }
 
-    if(contador > 2){
+    if(contador > 2){ // Comprobamos si hay más de dos '|'
         tipoError = 4;
         hayError = true;
         return;
     }
 
-    if(contador == 0){ 
+    if(contador == 0){ // Si no hay '|'
         tipoError = 5;
         hayError = true;
         return;
     }
 
 
-    if (contador == 2) {
-        pos1 = linea.find('|');
-        while (pos1 != string::npos) {
-            pos2 = linea.find('|', pos1 + 1);
-            if (pos2 == string::npos || pos2 - pos1 == 1) {
-                tipoError = 2;
-                hayError = true; // Agregar esta línea para indicar que hay un error
+    if (contador == 2) { // Si hay dos '|'
+        pos1 = linea.find('|'); // Buscamos la primera posición del carácter '|'
+        while (pos1 != string::npos) { // Buscamos la segunda posición del carácter '|'
+            pos2 = linea.find('|', pos1 + 1); 
+            if (pos2 == string::npos || pos2 - pos1 == 1) {// Comprobamos si hay dos '|' seguidos
+                tipoError = 2; // Si hay dos '|' seguidos, mostramos un error
+                hayError = true;
                 return;
             }
-            pos1 = linea.find('|', pos2 + 1);
+            pos1 = linea.find('|', pos2 + 1); // Buscamos la primera posición del carácter '|' a partir de la segunda posición
         }
     }
 
 
-    if(contador == 1 || contador == 2){ 
-        if(linea.back() == '|'){ 
-            if(contador == 2){
+    if(contador == 1 || contador == 2){  // Si hay un '|' o dos '|'
+        if(linea.back() == '|'){ // Comprobamos si la línea termina en '|'
                 tipoError = 3;
+                hayError = true;
                 return;
-            }
 
         }
     }
 }
 
 
-
-void convertirCon(string &contrasenya){
+void convertirCon(string &contrasenya){ // Función que convierte la contraseña. Se utiliza en la función addTeacher y addAnswers
     int recorredor;
 
     for(recorredor = 0; recorredor < (int)contrasenya.size(); recorredor++){
@@ -981,9 +954,7 @@ void convertirCon(string &contrasenya){
 }
 
 
-
-
-void batchAddQuestionsComando(Database &data, int &numData, const char *fileRef){
+void batchAddQuestionsComando(Database &data, int &numData, const char *fileRef){ // Función que añade las preguntas a la base de datos. Se utiliza en al inicio del programa como argumento
     string fileName, // Nombre del fichero
         linea; // Línea del fichero
     int numLinea = 0, // Número de línea
@@ -1047,10 +1018,11 @@ void batchAddQuestionsComando(Database &data, int &numData, const char *fileRef)
                 }
             }
 
-
             summary(numLinea, lineaError, preguntasAñadidas, numData, errorN); // Mostramos el resumen de las preguntas añadidas
         }
         else{
             error(ERR_FILE); // Mostramos el error ERR_FILE
         }
 }
+
+
