@@ -798,10 +798,10 @@ void summary(int numLinea, int lineaError, int &numData, int &errorN){ // Funci√
 
   
 void addBinTeachers(Database &data){ // Funci√≥n que guarda los profesores en un fichero binario
-    ofstream file("teachers.bin", ios::binary); // Open the file in binary mode
-    if (file.is_open()) { // Check if the file has been opened successfully
-        for (const auto& teacher : data.teachers) { // Iterate through the teachers
-            file.write(reinterpret_cast<const char*>(&teacher), sizeof(Teacher)); // Write the teacher to the file
+    ofstream file("teachers.bin", ios::binary); // Abrimos el fichero
+    if (file.is_open()) { // Comprobamos si se ha podido abrir el fichero
+        for (const auto& teacher : data.teachers) { // Recorremos los profesores
+            file.write(reinterpret_cast<const char*>(&teacher), sizeof(Teacher)); // Guardamos los profesores en el fichero
         }
         file.close(); // Close the file
     }
