@@ -10,6 +10,12 @@
       cout << "Numero" << endl;
       getline(cin, inputNumero); // Use the getline function to read input
 
-      numeroCon = stoi(inputNumero); // Convert the string to an integer
+         if(inputNumero != "1" || inputNumero != "2" || inputNumero != "3" || inputNumero != "4" || inputNumero != "5" || inputNumero != "6" || inputNumero != "7" || inputNumero != "8") {
+            cout << "ERROR: wrong option" << endl;
+         }
+         else if(inputNumero == "1" || inputNumero == "2" || inputNumero == "3" || inputNumero != "4" || inputNumero != "5" || inputNumero != "6" || inputNumero != "7" || inputNumero != "8"){
+            numeroCon = stoi(inputNumero); // Convert the string to an integer
+            cout << "Numero: " << numeroCon << endl;
+         }
 
    }

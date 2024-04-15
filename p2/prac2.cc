@@ -63,7 +63,7 @@ void comprobarNom(Database &data, string &nombre, bool &nombreCorrecto, bool &rn
 void validarFila(string &linea, int &tipoError, int &contador, bool &hayError);
 void convertirCon(string &contrasenya);
 void batchAddQuestionsComando(Database &data, int &numData, const char *fileRef);
-void summary(int numLinea, int lineaError, int preguntasAñadidas, int &numData, int &errorN);
+void summary(int numLinea, int lineaError, int &numData, int &errorN);
 void error(Error e);
 void showMenu();
 
@@ -138,7 +138,6 @@ int main(int argc, char *argv[]) {
     int numData = 1,
         recorredor,
         recorredor2,
-        recorredor3,
         contarF = 0,
         contarS = 0;
     data.nextId= numData;
@@ -147,55 +146,90 @@ int main(int argc, char *argv[]) {
 
     loadTeachers(data);
 
-    for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){
-        numData = data.questions[recorredor].id;
-    }
+    if(argc > 1){
 
-    for (recorredor3 = 1; recorredor3 < argc; recorredor3++) {
-        if (recorredor3 > 1 && strcmp(argv[recorredor3 - 1], "-f") == 0) {
-            continue; // Ignorar el nombre del archivo de preguntas
+        for (recorredor2 = 1; recorredor2 < argc; recorredor2++) {
+            if (argv[recorredor2] != nullptr && strcmp(argv[recorredor2], "-s") == 0) {
+                contarS++;
+            }
         }
-        if (strcmp(argv[recorredor3], "-s") != 0 && strcmp(argv[recorredor3], "-f") != 0) {
-           error(ERR_ARGS); 
-           return 0;
-        }
-    }
 
-    for (recorredor = 1; recorredor < argc; recorredor++) {
-        if (strcmp(argv[recorredor], "-f") == 0) {
-            contarF++;
-            
-            if(contarF == 3){
+        for (recorredor = 1; recorredor < argc ; recorredor++) {
+            if (argv[recorredor] != nullptr && strcmp(argv[recorredor], "-f") == 0) {
+                contarF++;
+            }
+        }
+                
+        if(contarF == 3){
+            error(ERR_ARGS);
+                return 0;
+        }
+        
+
+        if(contarF == 2){
+            for (recorredor = 1; recorredor < argc ; recorredor++) {
+                if (recorredor < argc && argv[recorredor + 1] != nullptr  && strcmp(argv[recorredor + 1], "-f") != 0) {
+                    error(ERR_ARGS);
+                    return 0;
+                }
+
+                if (recorredor < argc&& argv[recorredor + 1] != nullptr && strcmp(argv[recorredor + 1], "-f") == 0) {
+                    fileName = "-f";
+                }
+                
+            }
+        }
+
+        if(contarF == 1){
+            if(argc == 2){
                 error(ERR_ARGS);
                 return 0;
             }
 
-            if (contarF == 1) {
-                  if (strcmp(argv[recorredor + 1], "-f") == 0 || strcmp(argv[recorredor + 1], "-s") != 0){
-                    fileName = argv[recorredor + 1];
-                    contarF++;
-                  }
-                  else if (strcmp(argv[recorredor + 1], "-s") == 0){
+
+            for (recorredor = 1; recorredor < argc ; recorredor++) {
+                if (argv[recorredor] != nullptr && strcmp(argv[recorredor], "-f") == 0){
+                        fileName = argv[recorredor + 1];
+                }  
+            }
+
+        }
+
+        for(recorredor2 = 1; recorredor < argc; recorredor++){
+            if((contarF == 0 || contarF == 1 || contarF == 2) && (contarS == 0 || contarS == 1) && !fileName.empty()){
+                if (argv[recorredor2] != nullptr && strcmp(argv[recorredor2], "-s") != 0 && strcmp(argv[recorredor2], "-f") != 0 && strcmp(argv[recorredor2], fileName.c_str()) != 0){
                     error(ERR_ARGS);
                     return 0;
-                  }     
+                }  
+            }
+        }
+
+
+        if(contarF < 3 && contarF > 0){
+            batchAddQuestionsComando(data, numData, fileName.c_str());
+        }
+
+        if(contarS == 1 && fileName != "-s"){
+            viewStatistics(data);
+            return 0;
+        }
+        else if(contarS == 2 && fileName == "-s"){
+            viewStatistics(data);
+            return 0;
+        }
+        else{
+            if(contarS > 1){
+                error(ERR_ARGS);
+                return 0;
             }
         }
     }
 
-    for (recorredor2 = 1; recorredor2 < argc; recorredor2++) {
-        if (strcmp(argv[recorredor2], "-s") == 0) {
-            contarS++;
-        }
+
+    for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){
+        numData = data.questions[recorredor].id;
     }
 
-    if(contarF < 3 && contarF > 0){
-        batchAddQuestionsComando(data, numData, fileName.c_str());
-    }
-
-    if(contarS == 1){
-        viewStatistics(data);
-    }
 
     do{
         showMenu();
@@ -219,7 +253,7 @@ int main(int argc, char *argv[]) {
                 addAnswers(data);
                 break;
             case '6': // Llamar a la función "viewAnswers" para mostrar las preguntas con sus respuestas
-                pruebaS(data); // Replace this line with the fixed code below
+                viewAnswers(data);
                 break;
             case '7': // Llamar a la función "viewStatistics" para ver las estadísticas de las preguntas
                 viewStatistics(data);
@@ -232,6 +266,9 @@ int main(int argc, char *argv[]) {
             default: error(ERR_OPTION);
         }
     }while(option!='q');
+
+    addBinTeachers(data);
+
 
   return 0;
 }
@@ -312,7 +349,7 @@ void batchAddQuestions (Database &data, int &numData){
         contador, // Contador de '|'
         lineaError = 0, // Línea con error
         preguntasAñadidas = 1, // Lineas sin error
-        errorN; // Número de errores
+        errorN; // Número de errores vacios
     bool equivocado, // Comprueba si el fichero está vacío
         hayError; // Comprueba si hay un error
     Question pregunta; 
@@ -340,7 +377,7 @@ void batchAddQuestions (Database &data, int &numData){
                 validarFila(linea, tipoError, contador, hayError); // Validamos la línea
 
                 if(tipoError == 1){
-                    numLinea--; // Si hay un error, disminuimos el número de línea
+                  errorN++; // Si hay un error, disminuimos el número de línea
                 }
 
                 if(hayError && tipoError != 1){ // Si hay un error, mostramos el error
@@ -369,6 +406,7 @@ void batchAddQuestions (Database &data, int &numData){
 
                         pregunta.unit = stoi(linea.substr(0, pos1)); // Convertimos la unidad a entero
                         pregunta.question = linea.substr(pos1 + 1); // Asignamos la pregunta
+                        pregunta.answer = ""; // Asignamos la respuesta vacía
                         pregunta.id = data.nextId; // Asignamos el id a la pregunta
 
                         data.questions.push_back(pregunta); // Añadimos la pregunta a la base de datos
@@ -378,7 +416,7 @@ void batchAddQuestions (Database &data, int &numData){
                 }
             }
 
-            summary(numLinea, lineaError, preguntasAñadidas, numData, errorN); // Mostramos el resumen de las preguntas añadidas
+            summary(numLinea, lineaError, numData, errorN); // Mostramos el resumen de las preguntas añadidas
 
             file.close(); // Cerramos el fichero
         }
@@ -652,6 +690,9 @@ void addAnswers(Database &data){
 void viewAnswers(Database &data){
     int recorredor;
 
+
+
+
     for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){ // Recorremos las preguntas
         if(!data.questions[recorredor].answer.empty()){ // Comprobamos si la pregunta tiene respuesta
             cout << data.questions[recorredor].id << ". (" 
@@ -660,6 +701,7 @@ void viewAnswers(Database &data){
             << data.questions[recorredor].answer << endl;
         }
     }
+
 }
 
 
@@ -745,30 +787,25 @@ void exportQuestions(Database &data){
 
 // Funciones auxiliares
 
-void summary(int numLinea, int lineaError, int preguntasAñadidas, int &numData, int &errorN){ // Función que muestra el resumen de las preguntas añadidas, sirve en el modulo batchAddQuestions
+void summary(int numLinea, int lineaError, int &numData, int &errorN){ // Función que muestra el resumen de las preguntas añadidas, sirve en el modulo batchAddQuestions    
     if(numLinea == 0){ // Comprobamos si el fichero está vacío
         cout << "Summary: 0/0 questions added" << endl;
     }
     else{
         cout << "Summary: " << numLinea - lineaError - errorN << "/" << numLinea - errorN << " questions added" << endl;
-        numData = preguntasAñadidas;
     }
 } 
 
-
-void addBinTeachers(Database &data){ // Función que añade los profesores a un fichero binario
-    ofstream file;
-    int recorredor;
-
-    file.open("teachers.bin", ios::binary); // Abrimos el fichero
-    if(file.is_open()){ // Comprobamos si se ha podido abrir el fichero
-        for(recorredor = 0; recorredor < (int)data.teachers.size(); recorredor++){ // Recorremos los profesores
-            file.write((char*)&data.teachers[recorredor], sizeof(Teacher));// Guardamos los profesores en el fichero
+  
+void addBinTeachers(Database &data){ // Función que guarda los profesores en un fichero binario
+    ofstream file("teachers.bin", ios::binary); // Open the file in binary mode
+    if (file.is_open()) { // Check if the file has been opened successfully
+        for (const auto& teacher : data.teachers) { // Iterate through the teachers
+            file.write(reinterpret_cast<const char*>(&teacher), sizeof(Teacher)); // Write the teacher to the file
         }
-        file.close(); // Cerramos el fichero
-    }else{
-        error(ERR_FILE); // Si no se ha podido abrir el fichero, mostramos un error
+        file.close(); // Close the file
     }
+
 }
 
 
@@ -782,9 +819,6 @@ void loadTeachers(Database &data){ // Función que carga los profesores de un fi
             data.teachers.push_back(teacher); // Añadimos los profesores a la base de datos
         }
         file.close();// Cerramos el fichero
-    }
-    else{
-        error(ERR_FILE); // Si no se ha podido abrir el fichero, mostramos un error
     }
 }
 
@@ -845,11 +879,15 @@ void comprobarNom(Database &data, string &nombre, bool &nombreCorrecto, bool &rn
 
 
 void validarFila(string &linea, int &tipoError, int &contador, bool &hayError){ // Función que valida la línea. Se utiliza en la función batchAddQuestions y la auxiliar batchAddQuestionsComando
+    int unidad;
     size_t pos1, pos2;
+    bool convertido;
 
     contador = 0;
     tipoError = 0;
     hayError = false;
+    convertido = false;
+
 
     if(linea.empty()){ // Comprobamos si la línea está vacía
         tipoError = 1;
@@ -864,26 +902,45 @@ void validarFila(string &linea, int &tipoError, int &contador, bool &hayError){ 
     }
 
     if (!isdigit(linea[0])) { // Comprobamos si la unidad es un número
-        tipoError = 1;
+        tipoError = 2;
         hayError = true;
         return;
     }
 
+    if(isdigit(linea[0])){ // Comprobamos si la unidad es un número
+        try{
+            unidad = stoi(linea.substr(0, 1)); // Convertimos la unidad a entero
+            convertido = true;
+        }
+        catch(const std::invalid_argument&){ // Si no se puede convertir a entero, mostramos un error
+            tipoError = 2;
+            hayError = true;
+            return;
+        }
+
+        if(convertido){
+            if(unidad > 5 || unidad < 1){ // Comprobamos si la unidad está entre 1 y 5
+                tipoError = 2;
+                hayError = true;
+                return;
+            }
+        }
+    }
 
     if(contador < 1){ // Comprobamos si hay menos de un '|'
-        tipoError = 4;
+        tipoError = 2;
         hayError = true;
         return;
     }
 
     if(contador > 2){ // Comprobamos si hay más de dos '|'
-        tipoError = 4;
+        tipoError = 2;
         hayError = true;
         return;
     }
 
     if(contador == 0){ // Si no hay '|'
-        tipoError = 5;
+        tipoError = 2;
         hayError = true;
         return;
     }
@@ -1018,7 +1075,7 @@ void batchAddQuestionsComando(Database &data, int &numData, const char *fileRef)
                 }
             }
 
-            summary(numLinea, lineaError, preguntasAñadidas, numData, errorN); // Mostramos el resumen de las preguntas añadidas
+            summary(numLinea, lineaError, numData, errorN);
         }
         else{
             error(ERR_FILE); // Mostramos el error ERR_FILE
