@@ -144,53 +144,53 @@ int main(int argc, char *argv[]) {
     char option;
     string fileName;
 
-    loadTeachers(data);
+    loadTeachers(data); // Cargamos los profesores de un fichero binario
 
-    if(argc > 1){
-        for (recorredor2 = 1; recorredor2 < argc; recorredor2++) {
-            if (argv[recorredor2] != nullptr && strcmp(argv[recorredor2], "-s") == 0) {
+    if(argc > 1){ // Comprobamos si hay argumentos
+        for (recorredor2 = 1; recorredor2 < argc; recorredor2++) { // Recorremos los argumentos
+            if (argv[recorredor2] != nullptr && strcmp(argv[recorredor2], "-s") == 0) { //  Comprobamos si hay un argumento '-s'
                 contarS++;
             }
         }
 
         for (recorredor = 1; recorredor < argc ; recorredor++) {
-            if (argv[recorredor] != nullptr && strcmp(argv[recorredor], "-f") == 0) {
+            if (argv[recorredor] != nullptr && strcmp(argv[recorredor], "-f") == 0) { // Comprobamos si hay un argumento '-f'
                 contarF++;
             }
         }
                 
-        if(contarF == 3){
+        if(contarF == 3){ // Comprobamos si hay 3 argumentos '-f'
             error(ERR_ARGS);
-                return 0;
+            return 0;
         }
 
         if(contarF == 2){
-            for (recorredor = 1; recorredor < argc ; recorredor++) {
-                if (recorredor < argc && argv[recorredor + 1] != nullptr  && strcmp(argv[recorredor + 1], "-f") != 0) {
-                    error(ERR_ARGS);
+            for (recorredor = 1; recorredor < argc ; recorredor++) { // Recorremos los argumentos
+                if (recorredor < argc && argv[recorredor + 1] != nullptr  && strcmp(argv[recorredor + 1], "-f") != 0) { // Comprobamos si no hay un argumento después de '-f'
+                    error(ERR_ARGS); // Si no hay un argumento después de '-f', mostramos un error
                     return 0;
                 }
 
-                if (recorredor < argc&& argv[recorredor + 1] != nullptr && strcmp(argv[recorredor + 1], "-f") == 0) {
-                    fileName = "-f";
+                if (recorredor < argc&& argv[recorredor + 1] != nullptr && strcmp(argv[recorredor + 1], "-f") == 0) { // Comprobamos si hay un argumento después de '-f'
+                    fileName = "-f"; // Asignamos el argumento después de '-f' a fileName
                 }
             }
         }
 
-        if(contarF == 1){
-            if(argc == 2){
-                error(ERR_ARGS);
+        if(contarF == 1){ // Comprobamos si hay 1 argumento '-f'
+            if(argc == 2){ // Comprobamos si hay 2 argumentos
+                error(ERR_ARGS);// Si hay 2 argumentos, mostramos un error 
                 return 0;
             }
 
-            for (recorredor = 1; recorredor < argc ; recorredor++) {
-                if (argv[recorredor] != nullptr && strcmp(argv[recorredor], "-f") == 0){
-                    if(argv[recorredor + 1] != nullptr){
-                        fileName = argv[recorredor + 1];
+            for (recorredor = 1; recorredor < argc ; recorredor++) { // Recorremos los argumentos
+                if (argv[recorredor] != nullptr && strcmp(argv[recorredor], "-f") == 0){ // Comprobamos si hay un argumento '-f'
+                    if(argv[recorredor + 1] != nullptr){// Comprobamos si hay un argumento después de '-f'
+                        fileName = argv[recorredor + 1]; // Asignamos el argumento después de '-f' a fileName
                     }
 
-                    if(argv[recorredor + 1] == nullptr){
-                        error(ERR_ARGS);
+                    if(argv[recorredor + 1] == nullptr){ // Comprobamos si no hay un argumento después de '-f'
+                        error(ERR_ARGS); // Si no hay un argumento después de '-f', mostramos un error
                         return 0;
                     }
                 }  
@@ -198,42 +198,43 @@ int main(int argc, char *argv[]) {
 
         }
 
-        for(recorredor = 1; recorredor < argc; recorredor++){
-            if((contarF >=0 && contarF < 3) && (contarS >=0 && contarS < 2) && !fileName.empty()){
+        for(recorredor = 1; recorredor < argc; recorredor++){ // Recorremos los argumentos
+            if((contarF >=0 && contarF < 3) && (contarS >=0 && contarS < 2) && !fileName.empty()){ // Comprobamos si hay argumentos correctos
 
-                if (argv[recorredor] != nullptr && strcmp(argv[recorredor], "-s") != 0 && strcmp(argv[recorredor], "-f") != 0 && strcmp(argv[recorredor], fileName.c_str()) != 0){
-                    error(ERR_ARGS);
+                if (argv[recorredor] != nullptr && strcmp(argv[recorredor], "-s") != 0 && 
+                strcmp(argv[recorredor], "-f") != 0 && strcmp(argv[recorredor], fileName.c_str()) != 0){ // Comprobamos si hay argumentos correctos
+                    error(ERR_ARGS); // Si hay argumentos incorrectos, mostramos un error
                     return 0;
                 }  
             }
         }
 
-        if(argc > 2){
-            if(contarF == 0){
-                error(ERR_ARGS);
+        if(argc > 2){ // Comprobamos si hay más de 2 argumentos
+            if(contarF == 0){ // Comprobamos si no hay argumentos '-f'
+                error(ERR_ARGS); // Si no hay argumentos '-f', mostramos un error
                 return 0;
             }
         }
 
-        if(contarS == 2 && fileName != "-s"){
-            error(ERR_ARGS);
+        if(contarS == 2 && fileName != "-s"){ // Comprobamos si hay 2 argumentos '-s'
+            error(ERR_ARGS); // Si hay 2 argumentos '-s', mostramos un error
             return 0;
         }
 
         if(contarF < 3 && contarF > 0){
-            batchAddQuestionsComando(data, numData, fileName.c_str());
+            batchAddQuestionsComando(data, numData, fileName.c_str()); // Añadimos preguntas desde un fichero
         }
 
-        if(contarS == 1 && fileName != "-s"){
-            viewStatistics(data);
+        if(contarS == 1 && fileName != "-s"){ // Comprobamos si hay un argumento '-s'
+            viewStatistics(data); // Mostramos las estadísticas
             return 0;
         }
-        else if(contarS == 2 && fileName == "-s"){
-            viewStatistics(data);
+        else if(contarS == 2 && fileName == "-s"){ // Comprobamos si hay 2 argumentos '-s' y que fileName sea '-s'
+            viewStatistics(data); // Mostramos las estadísticas
             return 0;
         }
-        else{
-            if(contarS > 1){
+        else{ // Si no hay argumentos '-s', mostramos el menú
+            if(contarS > 1){ // Comprobamos si hay más de 1 argumento '-s' 
                 error(ERR_ARGS);
                 return 0;
             }
@@ -241,8 +242,8 @@ int main(int argc, char *argv[]) {
     }
 
 
-    for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){
-        numData = data.questions[recorredor].id;
+    for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){ // Recorremos las preguntas
+        numData = data.questions[recorredor].id; // Asignamos el id a numData para obtener el siguiente id
     }
 
 
