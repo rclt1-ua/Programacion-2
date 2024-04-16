@@ -67,13 +67,6 @@ void summary(int numLinea, int lineaError, int &numData, int &errorN);
 void error(Error e);
 void showMenu();
 
-void pruebaS(Database data){
-    int recorredor;
-
-    for(recorredor = 0; recorredor < (int)data.questions.size(); recorredor++){
-        cout << data.questions[recorredor].id << ". (" << data.questions[recorredor].unit << ") " << data.questions[recorredor].question << endl;
-    }
-}
 
 /* Función que muestra los mensajes de error
 e: tipo de error a mostrar
