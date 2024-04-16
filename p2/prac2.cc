@@ -147,7 +147,6 @@ int main(int argc, char *argv[]) {
     loadTeachers(data);
 
     if(argc > 1){
-
         for (recorredor2 = 1; recorredor2 < argc; recorredor2++) {
             if (argv[recorredor2] != nullptr && strcmp(argv[recorredor2], "-s") == 0) {
                 contarS++;
@@ -164,7 +163,6 @@ int main(int argc, char *argv[]) {
             error(ERR_ARGS);
                 return 0;
         }
-        
 
         if(contarF == 2){
             for (recorredor = 1; recorredor < argc ; recorredor++) {
@@ -176,7 +174,6 @@ int main(int argc, char *argv[]) {
                 if (recorredor < argc&& argv[recorredor + 1] != nullptr && strcmp(argv[recorredor + 1], "-f") == 0) {
                     fileName = "-f";
                 }
-                
             }
         }
 
@@ -186,24 +183,42 @@ int main(int argc, char *argv[]) {
                 return 0;
             }
 
-
             for (recorredor = 1; recorredor < argc ; recorredor++) {
                 if (argv[recorredor] != nullptr && strcmp(argv[recorredor], "-f") == 0){
+                    if(argv[recorredor + 1] != nullptr){
                         fileName = argv[recorredor + 1];
+                    }
+
+                    if(argv[recorredor + 1] == nullptr){
+                        error(ERR_ARGS);
+                        return 0;
+                    }
                 }  
             }
 
         }
 
-        for(recorredor2 = 1; recorredor < argc; recorredor++){
-            if((contarF == 0 || contarF == 1 || contarF == 2) && (contarS == 0 || contarS == 1) && !fileName.empty()){
-                if (argv[recorredor2] != nullptr && strcmp(argv[recorredor2], "-s") != 0 && strcmp(argv[recorredor2], "-f") != 0 && strcmp(argv[recorredor2], fileName.c_str()) != 0){
+        for(recorredor = 1; recorredor < argc; recorredor++){
+            if((contarF >=0 && contarF < 3) && (contarS >=0 && contarS < 2) && !fileName.empty()){
+
+                if (argv[recorredor] != nullptr && strcmp(argv[recorredor], "-s") != 0 && strcmp(argv[recorredor], "-f") != 0 && strcmp(argv[recorredor], fileName.c_str()) != 0){
                     error(ERR_ARGS);
                     return 0;
                 }  
             }
         }
 
+        if(argc > 2){
+            if(contarF == 0){
+                error(ERR_ARGS);
+                return 0;
+            }
+        }
+
+        if(contarS == 2 && fileName != "-s"){
+            error(ERR_ARGS);
+            return 0;
+        }
 
         if(contarF < 3 && contarF > 0){
             batchAddQuestionsComando(data, numData, fileName.c_str());
@@ -918,6 +933,15 @@ void validarFila(string &linea, int &tipoError, int &contador, bool &hayError){ 
             return;
         }
 
+        pos1 = linea.find('|'); // Buscamos la primera posición del carácter '|'
+
+        if(pos1 != 1){
+            tipoError = 2;
+            hayError = true;
+            return;
+        }
+
+
         if(convertido){
             if(unidad > 5 || unidad < 1){ // Comprobamos si la unidad está entre 1 y 5
                 tipoError = 2;
@@ -965,7 +989,6 @@ void validarFila(string &linea, int &tipoError, int &contador, bool &hayError){ 
                 tipoError = 3;
                 hayError = true;
                 return;
-
         }
     }
 }
@@ -1081,5 +1104,3 @@ void batchAddQuestionsComando(Database &data, int &numData, const char *fileRef)
             error(ERR_FILE); // Mostramos el error ERR_FILE
         }
 }
-
-
