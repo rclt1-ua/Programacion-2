@@ -1,0 +1,10 @@
+1|De que sirve el diseño del algoritmo en papel?
+1|Se puede usar DEFINE en c++?
+2|Se puede convertir un int a string con alguna función directa como stoi?
+2|Si no inicializo un string, siempre será ""?
+3|Que pasa si no cierro el archivo después de abrirlo?
+3|Hay alguna forma de que, si quiero escribir en un archivo y ese no existe, evitar que se cree y directamente de error?
+4|Que pasa si no doy delete en memorias dinámicas?
+4|Por qué las memorias no pueden ser NULL?
+5|Qué es la programación orientada a objetos y para que sirve?
+5|Cual es la diferencia entre una clase y una estructura?
