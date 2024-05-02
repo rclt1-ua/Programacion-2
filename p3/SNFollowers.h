@@ -1,6 +1,7 @@
 #define _SNDATA_H_
 #include <iostream>
 #include <vector>
+#include "Util.h"
 
 using namespace std;
 
@@ -21,6 +22,5 @@ class SNFollowers{
         int getNumFollowers() const {return numFollowers;}
         double getMoney() const {return money;}
 };
-
 
 

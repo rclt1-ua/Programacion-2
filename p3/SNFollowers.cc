@@ -1,14 +1,11 @@
-#include <iostream>
-#include <string>
 #include "SNFollowers.h"
 #include "SNData.h"
 
-
-SNFollowers::SNFollowers(string nameM, int initialFollowers){
+SNFollowers::SNFollowers(string name, int initialFollowers){
     SNData sn;
     if(!sn.checkSN(name)){throw invalid_argument("EXCEPTION_UNKNOWN_SN");}
     if(initialFollowers < 0){throw invalid_argument(to_string(initialFollowers));}
-    name = nameM;
+    this->name = name;
     numFollowers = initialFollowers;
     money = 0.0;
 }   
@@ -50,6 +47,9 @@ double SNFollowers::collectCommission(double commission){
 }
 
 ostream& operator<<(ostream& os, const SNFollowers& snf){
-    os << "[" << snf.name << "|" << snf.numFollowers << "|" << snf.money << "])";
+    os << "[" << snf.name << "|" << snf.numFollowers << "|" << snf.money << "]";
     return os;
 }
+
+
+
