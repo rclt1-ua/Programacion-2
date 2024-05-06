@@ -1,6 +1,6 @@
-#include "SNFollowers.h"
-#include "Util.h"
-#include "Influencer.h"
+#include "SNFollowers.h" // Incluir SNFollowers.h que es una clase
+#include "Influencer.h" // Incluir Influencer.h que es una clase
+#include "Util.h" // Incluir Util.h que es una clase
 
 Influencer::Influencer(string name){ // Constructor de la clase
     this->name = name; // El nombre del influencer es el nombre que se le pasa
@@ -49,8 +49,8 @@ double Influencer::collectCommission(){ // Recolecta la comisión
 } 
 
 ostream & operator<<(ostream& os, const Influencer &influencer){ // Función que imprime la clase
-    os << "Influencer: " << influencer.name << " (" << influencer.commission << ")" << endl;
     int recorredor;
+    os << "Influencer: " << influencer.name << " (" << influencer.commission << ")" << endl;
     for(recorredor = 0; recorredor < (int)influencer.followers.size(); recorredor++){ // Recorre la lista de seguidores
         os << influencer.followers[recorredor]; // Imprime los seguidores
     }

@@ -1,19 +1,19 @@
-#ifndef _SNFOLLOWERS_H_
-#define _SNFOLLOWERS_H_
-#include <iostream>
+#ifndef _SNFOLLOWERS_H_ // Si no está definido el _SNFOLLOWERS_H_
+#define _SNFOLLOWERS_H_ // Definir _SNFOLLOWERS_H_
+#include <iostream> 
 #include <vector>
-#include "Util.h"
+#include "Util.h" // Incluir Util.h que es una clase
 
 using namespace std;
 
 class SNFollowers{
-    //AMIGAS
+    // Funciones amigas
     friend ostream& operator<<(ostream& os, const SNFollowers& snf); // Función que imprime la clase
-    //ATRIBUTOS Y METODOS
+    // Atributos y métodos
     private:
-        string name;
-        int numFollowers;
-        double money;
+        string name; // Nombre de la red social
+        int numFollowers; // Número de seguidores de la red social
+        double money; // Cantidad de dinero de la red social
     public:
         SNFollowers(string name, int initialFollowers); // Constructor de la clase
         void addFollowers(int nf); // Agrega seguidores a la red social
@@ -24,4 +24,4 @@ class SNFollowers{
         double getMoney() const {return money;} // Devuelve la cantidad de dinero de la red social
 };
 
-#endif
+#endif // Fin del if

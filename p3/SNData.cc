@@ -1,7 +1,7 @@
-#include "SNData.h"
+#include "SNData.h" // Incluir SNData.h que es una clase
 
 vector<SocialNetworkData> SNData::sns;
-//METODOS
+
 void SNData::newSocialNetwork(string name, double avgR, double avgM){ // Metodo que crea una nueva red social
     SocialNetworkData sN;
     int recorredor;

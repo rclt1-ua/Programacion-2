@@ -1,7 +1,7 @@
-#include "SNFollowers.h"
-#include "SNData.h"
+#include "SNFollowers.h" // Incluir SNFollowers.h que es una clase
+#include "SNData.h" // Incluir SNData.h que es una clase
 
-SNFollowers::SNFollowers(string name, int initialFollowers){
+SNFollowers::SNFollowers(string name, int initialFollowers){ // Constructor de la clase
     SNData sn;
     if(!sn.checkSN(name)){throw EXCEPTION_UNKNOWN_SN;} //Si la red social no existe, lanza excepcion
     if(initialFollowers < 0){throw invalid_argument(to_string(initialFollowers));} //Si la cantidad de seguidores es menor a 0, lanza excepcion
@@ -16,7 +16,7 @@ void SNFollowers::addFollowers(int nf){ // Agrega seguidores a la red social
     if(numFollowers < 0){numFollowers = 0;} // Si la cantidad de seguidores es menor a 0, la cantidad de seguidores es 0
 }
 
-void SNFollowers::addEvent(double rating){
+void SNFollowers::addEvent(double rating){ // Agrega un evento a la red social
     SNData sn;
     double avgRating = sn.getAvgRating(name), //Obtiene el promedio de rating de la red social
         avgMonetizing = sn.getAvgMonetizing(name), //Obtiene el promedio de monetización de la red social

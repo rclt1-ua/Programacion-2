@@ -8,9 +8,9 @@
 using namespace std;
 
 class Agency{
-    //AMIGAS
+    //Funciones amigas
     friend ostream& operator<<(ostream& os, const Agency& agency); // Función que imprime la clase
-    //ATRIBUTOS Y METODOS
+    //Atributos y métodos
     private:
         string name; // Nombre de la agencia
         double money; // Cantidad de dinero de la agencia

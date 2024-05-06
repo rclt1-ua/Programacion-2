@@ -1,6 +1,6 @@
-#include "Agency.h"
-#include "Influencer.h"
-#include "Util.h"
+#include "Agency.h" // Incluir Agency.h que es una clase
+#include "Influencer.h" // Incluir Influencer.h que es una clase
+#include "Util.h" // Incluir Util.h que es una clase
 
 Agency::Agency(string name, double initialMoney){ // Constructor de la clase
     this->name = name; // El nombre de la agencia es el nombre que se le pasa
@@ -80,7 +80,6 @@ double Agency::collectCommissions(){ // Recolecta las comisiones de los influenc
     money += comision; // La cantidad de dinero de la agencia es la comisión recolectada
     return comision; // Devuelve la comisión
 }
-
 
 ostream& operator<<(ostream &os, const Agency &agency){ // Función que imprime la clase
     int recorredor;

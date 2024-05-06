@@ -7,13 +7,13 @@
 using namespace std;
 
 struct SocialNetworkData{ // Estructura de datos de la red social
-    string name;
-    double averageRating;
-    double averageMonetizing;
+    string name; // Nombre de la red social
+    double averageRating; // Promedio de rating
+    double averageMonetizing; // Promedio de monetización
 };
 
 class SNData{ // Clase SNData
-    //ATRIBUTOS Y METODOS
+    //Atributos y métodos
     private:
         static vector<SocialNetworkData> sns; // Vector de datos de la red social
     public:

@@ -8,13 +8,13 @@
 using namespace std;
 
 class Influencer{ // Clase Influencer
-    //AMIGAS
+    //Funciones amigas
     friend ostream & operator<<(ostream &os, const Influencer &influencer); // Función que imprime la clase
-    // ATRIBUTOS Y METODOS
+    //Atributos y métodos
     private:
-        vector<SNFollowers> followers;
-        string name;
-        double commission;
+        vector<SNFollowers> followers; // Lista de seguidores
+        string name; // Nombre del influencer
+        double commission; // Comisión del influencer
     public:
         Influencer(string name); // Constructor de la clase
         void setCommission(double commission); // Establece la comisión
