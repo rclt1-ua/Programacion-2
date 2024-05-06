@@ -19,7 +19,7 @@ class Util{
   public:
     // prints an error message
     static void error(Error e);
-
+    
     // prints exception type (debug)
     static void debug(Exception e);
     
