@@ -25,7 +25,6 @@ void Util::error(Error e){
 }
 
 void Util::debug(Exception e) {
-
   const string EXCEPT_STR[] = {
     "EXCEPTION_INFL_NOT_FOUND",
     "EXCEPTION_WRONG_COMMISSION",
