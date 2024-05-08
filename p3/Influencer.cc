@@ -1,6 +1,4 @@
-#include "SNFollowers.h" // Incluir SNFollowers.h que es una clase
 #include "Influencer.h" // Incluir Influencer.h que es una clase
-#include "Util.h" // Incluir Util.h que es una clase
 
 Influencer::Influencer(string name){ // Constructor de la clase
     this->name = name; // El nombre del influencer es el nombre que se le pasa
@@ -19,12 +17,13 @@ void Influencer::addFollowers(string snName,int nFollowers){ // Agrega seguidore
         if(followers[recorredor].getName() == snName){ // Si el seguidor es igual al seguidor buscado
             followers[recorredor].addFollowers(nFollowers); // Agrega seguidores al seguidor
             return;
-        }
+        }       
     }
-    try{ 
+    try{
         SNFollowers snf(snName,nFollowers); // Crea un nuevo seguidor
         followers.push_back(snf); // Agrega el seguidor a la lista de seguidores
-    }catch(exception &e){Util::error(ERR_UNKNOWN_SN);} // Si no se puede crear el seguidor, lanza una excepción de seguidor desconocido
+    }catch(Exception &e){
+        Util::error(ERR_UNKNOWN_SN);} // Si no se puede crear el seguidor, imprime un error de red social desconocida
 }
 
 void Influencer::addEvent(int nsns,string sn[],double rat[]){// Agrega un evento
