@@ -14,7 +14,7 @@ class Agency{
     private:
         string name; // Nombre de la agencia
         double money; // Cantidad de dinero de la agencia
-        vector<Influencer*> influencers; // Los influencers que son parte de la agencia
+        vector<Influencer> influencers; // Los influencers que son parte de la agencia
     public:
         Agency(string name, double initialMoney); // Constructor de la clase
         Influencer *searchInfluencer(string infName); // Busca un influencer en la lista de influencers

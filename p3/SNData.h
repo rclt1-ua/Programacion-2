@@ -23,4 +23,4 @@ class SNData{ // Clase SNData
         static double getAvgMonetizing(string name); // Obtiene el promedio de monetización de la red social
 };
 
-#endif
+#endif // Fin de _SNDATA_H_
