@@ -26,4 +26,4 @@ class Influencer{ // Clase Influencer
         double getCommission() const {return commission;} // Devuelve la comisión del influencer
 };
 
-#endif
+#endif // Fin del if

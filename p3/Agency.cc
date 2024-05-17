@@ -20,7 +20,6 @@ void Agency::addInfluencer(string infName, double commission){ // Agrega un infl
         searchInfluencer(infName); // Busca el influencer
         Util::error(ERR_DUPLICATED); // Si lo encuentra, lanza una excepción de duplicado
     }catch(Exception &e){ // Si no lo encuentra
-        if (e == EXCEPTION_INFL_NOT_FOUND){ // Si la excepción es de influencer no encontrado
             try{ // Intenta ver si la comisión es correcta
                 Influencer inf(infName); // Crea un influencer con el nombre que se le pasa
                 inf.setCommission(commission); // Establece la comisión del influencer
@@ -28,7 +27,6 @@ void Agency::addInfluencer(string infName, double commission){ // Agrega un infl
             }catch(Exception &e){ // Si no es correcta la comisión
                 Util::error(ERR_WRONG_COMMISSION); // Lanza una excepción de comisión incorrecta
             }
-        }
     }
 }
 
@@ -61,7 +59,7 @@ void Agency::deleteInfluencer(string infName){ // Elimina un influencer de la li
         for (recorredor = 0; recorredor < (int)influencers.size(); recorredor++){ // Recorre la lista de influencers
             if (influencers[recorredor].getName() == infName){ // Si el influencer es igual al influencer buscado
                 influencers.erase(influencers.begin() + recorredor); // Elimina el influencer de la lista de influencers
-                return;
+                return; // Sale del bucle
             }
         }
     }catch(Exception &e){ // Si no lo encuentra

@@ -11,7 +11,6 @@ SNFollowers::SNFollowers(string name, int initialFollowers){ // Constructor de l
 }   
 
 void SNFollowers::addFollowers(int nf){ // Agrega seguidores a la red social
-    if(nf < 0){throw invalid_argument(to_string(nf));} // Si la cantidad de seguidores es menor a 0, lanza excepcion
     numFollowers += nf; // La cantidad de seguidores es la cantidad de seguidores que se le pasa
     if(numFollowers < 0){numFollowers = 0;} // Si la cantidad de seguidores es menor a 0, la cantidad de seguidores es 0
 }
@@ -48,7 +47,7 @@ double SNFollowers::collectCommission(double commission){ // Recolecta la comisi
 
 ostream& operator<<(ostream& os, const SNFollowers& snf){ // Función que imprime la clase
     os << "[" << snf.name << "|" << snf.numFollowers << "|" << snf.money << "]"; // Imprime el nombre de la red social, la cantidad de seguidores y la cantidad de dinero
-    return os;
+    return os; // Devuelve la impresión
 }
 
 

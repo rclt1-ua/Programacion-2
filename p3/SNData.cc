@@ -10,9 +10,9 @@ void SNData::newSocialNetwork(string name, double avgR, double avgM){ // Metodo 
 
     if(avgR <= 0 || avgR >= 1){throw invalid_argument(to_string(avgR));} //Si el promedio de rating es menor o igual a 0 o mayor o igual a 1, lanza excepcion
     if(avgM <= 0 || avgM >= 1){throw invalid_argument(to_string(avgM));} //Si el promedio de monetizacion es menor o igual a 0 o mayor o igual a 1, lanza excepcion
-    sN.name = name;
-    sN.averageRating = avgR;
-    sN.averageMonetizing = avgM;
+    sN.name = name; // Establece el nombre de la red social
+    sN.averageRating = avgR; // Establece el promedio de rating
+    sN.averageMonetizing = avgM; // Establece el promedio de monetizacion
     sns.push_back(sN); //Agrega la red social
 }
 

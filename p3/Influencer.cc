@@ -16,7 +16,7 @@ void Influencer::addFollowers(string snName,int nFollowers){ // Agrega seguidore
     for(recorredor = 0; recorredor < (int)followers.size(); recorredor++){ // Recorre la lista de seguidores
         if(followers[recorredor].getName() == snName){ // Si el seguidor es igual al seguidor buscado
             followers[recorredor].addFollowers(nFollowers); // Agrega seguidores al seguidor
-            return;
+            return; // Retorna
         }       
     }
     try{
@@ -27,9 +27,8 @@ void Influencer::addFollowers(string snName,int nFollowers){ // Agrega seguidore
 }
 
 void Influencer::addEvent(int nsns,string sn[],double rat[]){// Agrega un evento
-    int recorredor;
+    int recorredor, recorredor2;
     for(recorredor = 0; recorredor < nsns; recorredor++){ // Recorre la lista de seguidores
-        int recorredor2;
         for(recorredor2 = 0; recorredor2 < (int)followers.size(); recorredor2++){ // Recorre la lista de seguidores
             if(followers[recorredor2].getName() == sn[recorredor]){ // Si el seguidor es igual al seguidor buscado
                 followers[recorredor2].addEvent(rat[recorredor]); // Agrega el evento al seguidor
@@ -54,6 +53,6 @@ ostream & operator<<(ostream& os, const Influencer &influencer){ // Función que
         os << influencer.followers[recorredor]; // Imprime los seguidores
     }
     cout << endl; // Salto de línea
-    return os;
+    return os; // Devuelve la impresión
 }
 
